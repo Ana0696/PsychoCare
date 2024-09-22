@@ -2,9 +2,9 @@
 {
     public enum UserRole
     {
-        estagiario, 
-        secretario,
-        psicologo,
-        orientador
+        intern = 1,
+        secretary,
+        psychologist,
+        supervisor,
     }
 }
