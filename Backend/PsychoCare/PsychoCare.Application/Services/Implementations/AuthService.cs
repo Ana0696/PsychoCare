@@ -2,6 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using PsychoCare.Application.InputModels.Auth;
 using PsychoCare.Application.Services.Interfaces;
+using PsychoCare.Application.ViewModels;
 using PsychoCare.Application.ViewModels.Auth;
 using PsychoCare.Core.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
@@ -21,12 +22,16 @@ namespace PsychoCare.Application.Services.Implementations
             _configuration = configuration;
         }
 
-        public async Task<LoginResponse> Login(LoginInputModel request)
+        public async Task<Response<LoginResponse>> Login(LoginInputModel request)
         {
             var user = await _userRepository.GetByEmailAsync(request.Email);
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
             {
-                return null;
+                return new Response<LoginResponse> 
+                {
+                    Success = false,
+                    Message = "Informação inválida."
+                };
             }
 
             var jwtSettings = _configuration.GetSection("JwtSettings");
@@ -49,13 +54,17 @@ namespace PsychoCare.Application.Services.Implementations
                 signingCredentials: signingCredentials
             );
 
-            return new LoginResponse()
+            return new Response<LoginResponse>()
             {
-                Name = user.Name,
-                Surname = user.Email,
-                Email = user.Email,
-                Token = new JwtSecurityTokenHandler().WriteToken(tokenOptions),
-                Role = user.Role,
+                Success = true,
+                Data = new LoginResponse()
+                {
+                    Name = user.Name,
+                    Surname = user.Email,
+                    Email = user.Email,
+                    Token = new JwtSecurityTokenHandler().WriteToken(tokenOptions),
+                    Role = user.Role,
+                }
             };
         }
     }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PsychoCare.Application.InputModels.Auth;
 using PsychoCare.Application.Services.Interfaces;
+using PsychoCare.Application.ViewModels;
 using PsychoCare.Application.ViewModels.Auth;
 
 namespace PsychoCare.API.Controllers
@@ -17,15 +18,15 @@ namespace PsychoCare.API.Controllers
         }
 
         [HttpPost("login")]
-        [ProducesResponseType(typeof(LoginResponse), 200)]
+        [ProducesResponseType(typeof(Response<LoginResponse>), 200)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> Login([FromBody] LoginInputModel request)
         {
             var response = await _authService.Login(request);
-            if (response == null)
-                return Unauthorized();
+            if (response?.Success == true)
+                return Ok(response);
 
-            return Ok(response);
+            return BadRequest(response);
         }
     }
 }

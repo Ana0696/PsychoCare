@@ -1,7 +1,9 @@
-import api from './api';
+import { post } from './api';
+import { ApiResponse } from './models/ApiResponse';
 import { LoginRequest, LoginResponse } from './models/Auth';
 
-export const login = async (data: LoginRequest): Promise<LoginResponse> => {
-  const response = await api.post<LoginResponse>('/login', data);
-  return response.data;
+export const login = async (
+  data: LoginRequest,
+): Promise<ApiResponse<LoginResponse>> => {
+  return await post<LoginResponse, LoginRequest>('/Auth/login', data);
 };
