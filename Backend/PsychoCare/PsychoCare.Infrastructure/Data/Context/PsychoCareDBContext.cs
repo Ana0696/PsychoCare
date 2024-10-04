@@ -8,6 +8,7 @@ namespace PsychoCare.Infrastructure.Data.Context
         public PsychoCareDBContext(DbContextOptions<PsychoCareDBContext> options) : base(options) { }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<ScheduleBlock> ScheduleBlocks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
