@@ -14,7 +14,7 @@ const Header: React.FC = () => {
 
   return (
     <>
-      {user && (
+      {
         <header className="bg-blue-600 p-4 text-white flex justify-between items-center">
           <h1 className="text-2xl">PsychoCare</h1>
           <div className="relative">
@@ -36,7 +36,7 @@ const Header: React.FC = () => {
             </div>
           </div>
         </header>
-      )}
+      }
     </>
   );
 };

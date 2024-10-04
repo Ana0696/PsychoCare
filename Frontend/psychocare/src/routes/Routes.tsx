@@ -5,6 +5,8 @@ import ProtectedRoute from './ProtectedRoute';
 import Dashboard from '../pages/dashboard/Dashboard';
 import { UserRole } from '../models/User';
 import useAuth from '../hooks/useAuth';
+import Screening from '../pages/screening/Screening';
+import NavBar from '../components/common/NavBar';
 
 const AppRoutes: React.FC = () => {
   const { user } = useAuth();
@@ -15,7 +17,7 @@ const AppRoutes: React.FC = () => {
         path="/"
         element={user ? <Navigate to="/dashboard" /> : <Navigate to="/login" />}
       />
-      <Route path="/login" element={<Login />} />
+      <Route path="/login" element={<NavBar />} />
       <Route path="/unauthorized" element={<Unauthorized />} />
       <Route element={<ProtectedRoute allowedRoles={[UserRole.intern]} />}>
         <Route path="/dashboard" element={<Dashboard />} />
