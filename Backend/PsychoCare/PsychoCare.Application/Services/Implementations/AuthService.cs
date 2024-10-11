@@ -27,7 +27,7 @@ namespace PsychoCare.Application.Services.Implementations
             var user = await _userRepository.GetByEmailAsync(request.Email);
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
             {
-                return new Response<LoginResponse> 
+                return new Response<LoginResponse>
                 {
                     Success = false,
                     Message = "Informação inválida."
@@ -54,18 +54,15 @@ namespace PsychoCare.Application.Services.Implementations
                 signingCredentials: signingCredentials
             );
 
-            return new Response<LoginResponse>()
-            {
-                Success = true,
-                Data = new LoginResponse()
+            return new Response<LoginResponse>(
+                new LoginResponse()
                 {
                     Name = user.Name,
                     Surname = user.Email,
                     Email = user.Email,
                     Token = new JwtSecurityTokenHandler().WriteToken(tokenOptions),
                     Role = user.Role,
-                }
-            };
+                });
         }
     }
 }

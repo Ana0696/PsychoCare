@@ -1,10 +1,15 @@
-﻿using PsychoCare.Application.InputModels;
+﻿using PsychoCare.Application.InputModels.UserManagement;
+using PsychoCare.Application.ViewModels;
+using PsychoCare.Application.ViewModels.UserManagement;
+using PsychoCare.Core.Entities;
 
 namespace PsychoCare.Application.Services.Interfaces
 {
     public interface IUserManagementService
     {
-        bool Register(UserInputModel newUser);
-        bool EditById(UserInputModel newEdit, int id);
+        Task<Response> Register(RegisterInputModel request);
+        Task<Response<IEnumerable<UserListViewModel>>> GetList();
+        Task<Response<UserViewModel>> GetById(int id);
+        Task<Response> EditById(int id, EditUserInputModel request);
     }
 }

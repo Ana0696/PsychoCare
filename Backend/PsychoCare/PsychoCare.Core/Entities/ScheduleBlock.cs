@@ -10,17 +10,22 @@
 
         public virtual User User { get; set; }
 
-        public ScheduleBlock(TimeSpan startTime, TimeSpan endTime, DayOfWeek weekDay, int userId, string observation)
+        public ScheduleBlock() { }
+
+        public ScheduleBlock(TimeSpan startTime, TimeSpan endTime, DayOfWeek weekDay, string observation)
         {
             StartTime = startTime;
             EndTime = endTime;
             WeekDay = weekDay;
-            UserId = userId;
             Observation = observation;
         }
 
-
-
-        //public void Edit
+        public void EditScheduleBlock(TimeSpan startTime, TimeSpan endTime, DayOfWeek weekDay, string observation)
+        {
+            StartTime = startTime;
+            EndTime = endTime;
+            WeekDay = weekDay;
+            Observation = observation;
+        }
     }
 }
