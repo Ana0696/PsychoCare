@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { login as loginApi } from '../../api/auth';
 import useAuth from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import { showAlert } from '../common/Alert';
+import { showAlert } from '../../components/common/Alert';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -18,7 +18,7 @@ const Login: React.FC = () => {
       if (response.success === true) {
         login(response.data);
         showAlert('Login successful!', 'success');
-        navigate('/dashboard');
+        navigate('/user-management');
       } else {
         showAlert(response.message, 'error');
       }
@@ -72,6 +72,7 @@ const Login: React.FC = () => {
         <div className="flex-1 gap-2 mt-3">
           <button
             type="submit"
+            onClick={handleSubmit}
             className="w-full bg-cyan-700 text-white p-2 rounded"
           >
             Login
