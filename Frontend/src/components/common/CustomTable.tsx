@@ -75,7 +75,7 @@ const CustomTable = <T extends { id: number }>({ columns, data }: CustomTablePro
             <SearchIcon style={{ color: '#B0B3B8' }} />
           </IconButton>
           <InputBase
-            placeholder="Search for items"
+            placeholder="Pesquisar usuários"
             sx={{ ml: 1, flex: 1, color: '#B0B3B8' }}
             value={(state as TableState<T>).globalFilter || ''}
             onChange={(e) => setGlobalFilter(e.target.value || undefined)}

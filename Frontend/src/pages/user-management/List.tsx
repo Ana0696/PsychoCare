@@ -6,6 +6,7 @@ import { UserListResponse } from '../../api/models/UserManagement';
 import { showAlert } from '../../components/common/Alert';
 import { getUsers } from '../../api/user-management';
 import EditNoteIcon from '@mui/icons-material/EditNote';
+import PersonOffIcon from '@mui/icons-material/PersonOff';
 import { useNavigate } from 'react-router-dom';
 import { getTranslatedUserRole } from '../../models/Enums';
 
@@ -25,7 +26,7 @@ const UserListPage: React.FC = () => {
         } else if (response.message) {
           showAlert(response.message, 'error');
         } else {
-          showAlert('Login failed. Please check your credentials.', 'error');
+          showAlert('Falha ao efetuar login. Por favor, verifique suas credenciais.', 'error');
         }
       } catch (error) {
         showAlert('Falha ao carregar usuários.', 'error');
@@ -58,32 +59,42 @@ const UserListPage: React.FC = () => {
         Cell: ({ row }) => (
           <div className="flex items-center justify-between">
             <EditNoteIcon
-              className="text-yellow-400"
+              className="text-teal-700"
               onClick={() => navigate(`/user-management/edit/${row.values.id}`)}
             />
           </div>
         ),
       },
+      /*{{
+        
+        Header: 'Desativar',
+        accessor: '',
+        Cell: ({ row }) => (
+          <div className="flex items-center justify-between">
+            <PersonOffIcon className="text-purple-500" onClick={() => navigate(``)} />
+          </div>
+        ),
+      },
+      },*/
     ],
     [],
   );
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md">
+    <div className="p-6 rounded-lg shadow-md bg-slate-200">
       <div className="flex flex-col lg:flex-row justify-between mb-4">
-        <div>
-          <h2 className="text-xl font-bold">Users</h2>
+        <div className="flex flex-col gap-3">
+          <h2 className="text-xl font-bold">Usuários do sistema</h2>
           <p className="text-gray-600">
-            A list of all the users in your account including their name, title, email, and role.
+            Uma lista de todos os usuários da sua conta, incluindo nome, cargo, e-mail e função.
           </p>
         </div>
         <Button
           variant="contained"
-          color="primary"
-          className="mt-4 lg:mt-0"
+          className="mt-4 lg:mt-0 bg-gradient-to-br from-slate-900 to-slate-700"
           onClick={() => navigate(`/user-management/create`)}
         >
-          Add user
+          Novo usuário
         </Button>
       </div>
       <CustomTable columns={columns} data={users} />

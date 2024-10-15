@@ -95,11 +95,11 @@ const EditUser: React.FC = () => {
     <Formik initialValues={initialValues} validationSchema={userSchema} onSubmit={handleSubmit}>
       {({ values, handleChange, setFieldValue, errors, touched }) => (
         <Form className="p-8 bg-white rounded-lg shadow-md w-full max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold mb-6 text-center">Edit User</h2>
+          <h2 className="text-2xl font-bold mb-6 text-center">Edição de Usuário</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <TextField
-              label="First Name"
+              label="Nome"
               name="name"
               variant="outlined"
               fullWidth
@@ -109,7 +109,7 @@ const EditUser: React.FC = () => {
               helperText={touched.name && errors.name}
             />
             <TextField
-              label="Last Name"
+              label="Sobrenome"
               name="surname"
               variant="outlined"
               fullWidth
@@ -129,7 +129,7 @@ const EditUser: React.FC = () => {
               helperText={touched.email && errors.email}
             />
             <TextField
-              label="Phone Number"
+              label="Telefone"
               name="phoneNumber"
               variant="outlined"
               fullWidth
@@ -137,7 +137,7 @@ const EditUser: React.FC = () => {
               onChange={handleChange}
             />
             <TextField
-              label="Birth Date"
+              label="Data de nascimento"
               name="birthDate"
               type="date"
               InputLabelProps={{ shrink: true }}
@@ -149,7 +149,7 @@ const EditUser: React.FC = () => {
             />
             <TextField
               select
-              label="Role"
+              label="Função"
               name="role"
               variant="outlined"
               fullWidth
@@ -174,7 +174,7 @@ const EditUser: React.FC = () => {
                 ))}
             </TextField>
             <TextField
-              label="Genre"
+              label="Gênero"
               name="genre"
               variant="outlined"
               fullWidth
@@ -185,7 +185,7 @@ const EditUser: React.FC = () => {
             />
             {values.role === UserRole.intern && (
               <TextField
-                label="Period"
+                label="Período"
                 name="period"
                 variant="outlined"
                 fullWidth
@@ -199,19 +199,19 @@ const EditUser: React.FC = () => {
 
           <div className="mt-4">
             <Checkbox name="isActive" checked={values.isActive} onChange={handleChange} color="primary" />
-            <span>Is Active</span>
+            <span>Usuário ativo</span>
           </div>
 
           <div className="mt-6">
-            <h3 className="text-lg font-semibold mb-2">Schedule Blocks</h3>
+            <h3 className="text-lg font-semibold mb-2">Bloqueios de agendamento</h3>
             <FieldArray name="scheduleBlocks">
               {({ remove, push }) => (
-                <div>
+                <div className="mb-2">
                   {values.scheduleBlocks.map((block, index) => (
-                    <div key={index} className="bg-gray-100 p-4 rounded-lg mb-4 shadow-sm">
+                    <div key={index} className="flex flex-col bg-gray-100 p-4 rounded-lg mb-4 shadow-sm gap-2">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <TextField
-                          label="Start Time"
+                          label="Horário inicial"
                           name={`scheduleBlocks.${index}.startTime`}
                           type="time"
                           fullWidth
@@ -227,7 +227,7 @@ const EditUser: React.FC = () => {
                           }
                         />
                         <TextField
-                          label="End Time"
+                          label="Horário final"
                           name={`scheduleBlocks.${index}.endTime`}
                           type="time"
                           fullWidth
@@ -243,7 +243,7 @@ const EditUser: React.FC = () => {
                         />
                         <TextField
                           select
-                          label="Week Day"
+                          label="Dia da semana"
                           name={`scheduleBlocks.${index}.weekDay`}
                           fullWidth
                           value={block.weekDay}
@@ -266,7 +266,7 @@ const EditUser: React.FC = () => {
                         </TextField>
                       </div>
                       <TextField
-                        label="Observation"
+                        label="Observações"
                         name={`scheduleBlocks.${index}.observation`}
                         fullWidth
                         multiline
@@ -282,20 +282,25 @@ const EditUser: React.FC = () => {
                   ))}
                   <Button
                     variant="outlined"
-                    color="primary"
+                    className="flex text-slate-900"
                     onClick={() =>
                       push({ startTime: '00:00:00', endTime: '00:00:00', weekDay: DayOfWeek.Monday, observation: '' })
                     }
                   >
-                    Add Schedule Block
+                    Adicionar novo bloqueio
                   </Button>
                 </div>
               )}
             </FieldArray>
           </div>
 
-          <Button type="submit" variant="contained" color="primary" fullWidth className="mt-6">
-            Save Changes
+          <Button
+            type="submit"
+            variant="contained"
+            fullWidth
+            className="mt-6 bg-gradient-to-br from-slate-900 to-slate-700"
+          >
+            Salvar mudanças
           </Button>
         </Form>
       )}

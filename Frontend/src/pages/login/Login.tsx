@@ -17,8 +17,8 @@ const Login: React.FC = () => {
   const initialValues: LoginValues = { email: '', password: '', rememberMe: false };
 
   const validationSchema = Yup.object({
-    email: Yup.string().email('Invalid email address').required('Required'),
-    password: Yup.string().required('Required'),
+    email: Yup.string().email('Invalid email address').required('Campo obrigatório'),
+    password: Yup.string().required('Campo obrigatório'),
   });
 
   const handleSubmit = async (values: LoginValues) => {
@@ -30,23 +30,23 @@ const Login: React.FC = () => {
       } else if (response.message) {
         showAlert(response.message, 'error');
       } else {
-        showAlert('Login failed. Please check your credentials.', 'error');
+        showAlert('Falha no login. Por favor, verifique suas credenciais.', 'error');
       }
     } catch (error) {
-      showAlert('Login failed. Please check your credentials.', 'error');
+      showAlert('Falha no login. Por favor, verifique suas credenciais.', 'error');
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+    <div className="flex items-center justify-center min-h-screen w-screen bg-gradient-to-tr from-slate-900 via-slate-700 to-slate-900">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-center text-gray-900">Sign in to your account</h2>
+        <h2 className="text-2xl font-bold text-center text-gray-900">Faça login na sua conta</h2>
         <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
           <Form className="mt-8 space-y-6">
             <div className="rounded-md shadow-sm">
               <div>
                 <label htmlFor="email" className="sr-only">
-                  Email address
+                  Email
                 </label>
                 <Field
                   id="email"
@@ -55,13 +55,13 @@ const Login: React.FC = () => {
                   autoComplete="email"
                   required
                   className="relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  placeholder="Email address"
+                  placeholder="Email"
                 />
                 <ErrorMessage name="email" component="div" className="text-red-600" />
               </div>
               <div className="mt-4">
                 <label htmlFor="password" className="sr-only">
-                  Password
+                  Senha
                 </label>
                 <Field
                   id="password"
@@ -70,7 +70,7 @@ const Login: React.FC = () => {
                   autoComplete="current-password"
                   required
                   className="relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  placeholder="Password"
+                  placeholder="Senha"
                 />
                 <ErrorMessage name="password" component="div" className="text-red-600" />
               </div>
@@ -85,21 +85,21 @@ const Login: React.FC = () => {
                   className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
                 />
                 <label htmlFor="rememberMe" className="block ml-2 text-sm text-gray-900">
-                  Remember me
+                  Lembre-se de mim
                 </label>
               </div>
 
               <div className="text-sm">
-                <button className="font-medium text-indigo-600 hover:text-indigo-500">Forgot password?</button>
+                <button className="font-medium text-cyan-700 hover:text-slate-800">Esqueceu sua senha?</button>
               </div>
             </div>
 
             <div>
               <button
                 type="submit"
-                className="flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-slate-900 border border-transparent rounded-md shadow-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-600"
               >
-                Sign in
+                Login
               </button>
             </div>
           </Form>

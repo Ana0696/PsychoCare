@@ -9,7 +9,7 @@ export const UserRoleNames: Record<UserRole, string> = {
   [UserRole.intern]: 'Estagiário',
   [UserRole.secretary]: 'Secretário',
   [UserRole.psychologist]: 'Psicólogo',
-  [UserRole.supervisor]: 'Coordenador',
+  [UserRole.supervisor]: 'Orientador',
 };
 
 export function getTranslatedUserRole(role: UserRole): string {

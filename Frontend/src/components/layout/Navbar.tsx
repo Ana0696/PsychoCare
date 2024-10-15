@@ -26,14 +26,14 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
   return (
     <>
       {isAuthenticated() && (
-        <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 h-14">
+        <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-slate-900 dark:border-slate-800 h-14">
           <div className="px-3 py-3 lg:px-5 lg:pl-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center justify-start rtl:justify-end">
                 <button
                   aria-controls="logo-sidebar"
                   type="button"
-                  className="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                  className="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-slate-900 dark:focus:ring-slate-800"
                   onClick={toggleSidebar}
                 >
                   <span className="sr-only">Open sidebar</span>
@@ -72,22 +72,22 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
                           {user!.email}
                         </p>
                       </div>
-                      <ul className="py-1" role="none">
-                        <li>
+                      <ul className="flex flex-col items-start w-full py-1" role="none">
+                        <li className="flex w-full">
                           <button
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                            className="block w-full px-0 py-2 pl-4 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white text-left rounded-md"
                             role="menuitem"
                           >
                             Alterar senha
                           </button>
                         </li>
-                        <li>
+                        <li className="flex w-full">
                           <button
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                            className="block w-full px-0 py-2 pl-4 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white text-left rounded-md"
                             role="menuitem"
                             onClick={handleLogout}
                           >
-                            Logout
+                            Sair
                           </button>
                         </li>
                       </ul>
