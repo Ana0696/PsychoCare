@@ -1,28 +1,30 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PsychoCare.Application.InputModels.Screening;
 using PsychoCare.Application.InputModels.UserManagement;
+using PsychoCare.Application.Services.Implementations;
 using PsychoCare.Application.Services.Interfaces;
 using PsychoCare.Application.ViewModels;
+using PsychoCare.Application.ViewModels.Screening;
 using PsychoCare.Application.ViewModels.UserManagement;
 
 namespace PsychoCare.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserManagementController : ControllerBase
+    public class ScreeningController : ControllerBase
     {
-        private readonly IUserManagementService _userManagementService;
-
-        public UserManagementController(IUserManagementService userManagementService)
+        private readonly IScreeningService _screeningService;
+        public ScreeningController(IScreeningService screeningService)
         {
-            _userManagementService = userManagementService;
+            _screeningService = screeningService;
         }
 
         [HttpPost("register")]
         [ProducesResponseType(typeof(Response), 200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> Register(RegisterInputModel request)
+        public async Task<IActionResult> Register(RegisterScreeningInputModel request)
         {
-            var response = await _userManagementService.Register(request);
+            var response = await _screeningService.Register(request);
             if (response?.Success == true)
                 return Ok(response);
 
@@ -30,11 +32,11 @@ namespace PsychoCare.API.Controllers
         }
 
         [HttpGet("list")]
-        [ProducesResponseType(typeof(Response<UserListViewModel>), 200)]
+        [ProducesResponseType(typeof(Response<ScreeningListViewModel>), 200)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetList()
         {
-            var response = await _userManagementService.GetList();
+            var response = await _screeningService.GetList();
             if (response?.Success == true)
                 return Ok(response);
 
@@ -42,11 +44,11 @@ namespace PsychoCare.API.Controllers
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(Response<UserViewModel>), 200)]
+        [ProducesResponseType(typeof(Response<ScreeningViewModel>), 200)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetById(int id)
         {
-            var response = await _userManagementService.GetById(id);
+            var response = await _screeningService.GetById(id);
             if (response?.Success == true)
                 return Ok(response);
 
@@ -57,16 +59,26 @@ namespace PsychoCare.API.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(Response), 200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> EditById(int id, EditUserInputModel request)
+        public async Task<IActionResult> EditById(int id, EditScreeningInputModel request)
         {
-            var response = await _userManagementService.EditById(id, request);
+            var response = await _screeningService.EditById(id, request);
             if (response?.Success == true)
                 return Ok(response);
 
             return BadRequest(response);
         }
 
+        //Disable
+        [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(Response), 200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> DisableById(int id)
+        {
+            var response = await _screeningService.DisableById(id);
+            if (response?.Success == true)
+                return Ok(response);
 
-
+            return BadRequest(response);
+        }
     }
 }

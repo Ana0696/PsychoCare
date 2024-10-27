@@ -13,6 +13,8 @@
         public string Observations { get; private set; }
         public bool IsActive { get; private set; } = true;
 
+        public virtual IEnumerable<Screening> Screenings { get; set; }
+
         public Patient(int id, string name, string surname, DateTime birthDate, string phoneNumber, string email, DateTime contactDate, bool urgency, string timePreference, string observations, bool isActive) 
         {
             Id = id; 

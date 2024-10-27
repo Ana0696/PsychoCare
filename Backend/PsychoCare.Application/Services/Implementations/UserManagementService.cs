@@ -26,8 +26,8 @@ namespace PsychoCare.Application.Services.Implementations
                 return new Response(false, "Email já cadastrado."); 
             }
 
-            User newUser = new User(request.Name, request.Surname, request.BirthDate, request.Genre, request.PhoneNumber,
-                request.Email, request.Period, BCrypt.Net.BCrypt.HashPassword(request.Password), request.Role, request.IsActive, 
+            User newUser = new User(request.Name, request.Surname, request.BirthDate, request.Gender, request.PhoneNumber,
+                request.Email, request.Period, BCrypt.Net.BCrypt.HashPassword(request.Password), request.Role, request.IsActive, request.SupervisorId,
                 request.ScheduleBlocks.Select(x => new ScheduleBlock(x.StartTime, x.EndTime, x.WeekDay, x.Observation)).ToList());
 
             
@@ -67,12 +67,13 @@ namespace PsychoCare.Application.Services.Implementations
                 Name = user.Name,
                 Surname = user.Surname,
                 BirthDate = user.BirthDate,
-                Genre = user.Genre,
+                Gender = user.Gender,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 Period = user.Period,
                 Role = user.Role,
                 IsActive = user.IsActive,
+                SupervisorId = user.SupervisorId,
                 ScheduleBlocks = user.ScheduleBlocks.Select(u =>
                 new ScheduleBlockInputModel() 
                 { 
@@ -97,8 +98,8 @@ namespace PsychoCare.Application.Services.Implementations
 
             await _userRepository.RemoveScheduleBlocks(user.ScheduleBlocks);
 
-            user.EditUser(request.Name, request.Surname, request.BirthDate, request.Genre, request.PhoneNumber, 
-                request.Email, request.Period, request.Role, request.IsActive, 
+            user.EditUser(request.Name, request.Surname, request.BirthDate, request.Gender, request.PhoneNumber, 
+                request.Email, request.Period, request.Role, request.IsActive, request.SupervisorId,
                 request.ScheduleBlocks.Select( u => new ScheduleBlock(
                     u.StartTime, u.EndTime, u.WeekDay, u.Observation)).ToList());
 

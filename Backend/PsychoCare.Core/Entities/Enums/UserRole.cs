@@ -4,7 +4,7 @@
     {
         intern = 1,
         secretary,
-        psychologist,
+        manager,
         supervisor,
     }
 }

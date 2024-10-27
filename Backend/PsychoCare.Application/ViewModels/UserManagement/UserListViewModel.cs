@@ -1,5 +1,4 @@
 ﻿using PsychoCare.Core.Entities.Enums;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PsychoCare.Application.ViewModels.UserManagement
 {
