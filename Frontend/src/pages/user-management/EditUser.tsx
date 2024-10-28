@@ -18,7 +18,7 @@ const userSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Required'),
   role: Yup.number().required('Required'),
   period: Yup.string().nullable(),
-  genre: Yup.string().nullable(),
+  gender: Yup.string().nullable(),
   scheduleBlocks: Yup.array().of(
     Yup.object().shape({
       startTime: Yup.string().required('Required'),
@@ -178,10 +178,10 @@ const EditUser: React.FC = () => {
               name="gender"
               variant="outlined"
               fullWidth
-              value={values.genre}
+              value={values.gender}
               onChange={handleChange}
-              error={touched.genre && Boolean(errors.genre)}
-              helperText={touched.genre && errors.genre}
+              error={touched.gender && Boolean(errors.gender)}
+              helperText={touched.gender && errors.gender}
             />
             {values.role === UserRole.intern && (
               <TextField

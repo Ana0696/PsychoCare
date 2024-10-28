@@ -13,7 +13,7 @@ export interface CreateUserRequest {
   name: string;
   surname: string;
   birthDate: string;
-  genre?: string;
+  gender?: string;
   phoneNumber: string;
   email: string;
   period?: string;
@@ -27,7 +27,7 @@ export interface GetUserResponse {
   name: string;
   surname: string;
   birthDate: string;
-  genre?: string;
+  gender?: string;
   phoneNumber: string;
   email: string;
   period?: string;
@@ -40,7 +40,7 @@ export interface EditUserRequest {
   name: string;
   surname: string;
   birthDate: string;
-  genre?: string;
+  gender?: string;
   phoneNumber: string;
   email: string;
   period?: string;
