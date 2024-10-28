@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PsychoCare.Application.InputModels.UserManagement;
 using PsychoCare.Application.Services.Interfaces;
 using PsychoCare.Application.ViewModels;
@@ -7,6 +8,7 @@ using PsychoCare.Application.ViewModels.UserManagement;
 namespace PsychoCare.API.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Roles = "secretary,manager")]
     [ApiController]
     public class UserManagementController : ControllerBase
     {

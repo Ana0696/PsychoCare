@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PsychoCare.Application.InputModels.Screening;
-using PsychoCare.Application.InputModels.UserManagement;
-using PsychoCare.Application.Services.Implementations;
 using PsychoCare.Application.Services.Interfaces;
 using PsychoCare.Application.ViewModels;
 using PsychoCare.Application.ViewModels.Screening;
-using PsychoCare.Application.ViewModels.UserManagement;
 
 namespace PsychoCare.API.Controllers
 {
@@ -19,6 +17,7 @@ namespace PsychoCare.API.Controllers
             _screeningService = screeningService;
         }
 
+        [Authorize(Roles = "secretary,manager")]
         [HttpPost("register")]
         [ProducesResponseType(typeof(Response), 200)]
         [ProducesResponseType(400)]
@@ -31,6 +30,8 @@ namespace PsychoCare.API.Controllers
             return BadRequest(response);
         }
 
+
+        [Authorize(Roles = "secretary,manager,intern")]
         [HttpGet("list")]
         [ProducesResponseType(typeof(Response<ScreeningListViewModel>), 200)]
         [ProducesResponseType(400)]
@@ -43,6 +44,7 @@ namespace PsychoCare.API.Controllers
             return BadRequest(response);
         }
 
+        [Authorize(Roles = "secretary,manager,intern")]
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(Response<ScreeningViewModel>), 200)]
         [ProducesResponseType(400)]
@@ -56,6 +58,7 @@ namespace PsychoCare.API.Controllers
         }
 
         //Edit
+        [Authorize(Roles = "secretary,manager")]
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(Response), 200)]
         [ProducesResponseType(400)]
@@ -69,6 +72,7 @@ namespace PsychoCare.API.Controllers
         }
 
         //Disable
+        [Authorize(Roles = "secretary,manager")]
         [HttpDelete("{id}")]
         [ProducesResponseType(typeof(Response), 200)]
         [ProducesResponseType(400)]
