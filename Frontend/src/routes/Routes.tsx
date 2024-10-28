@@ -24,13 +24,13 @@ const AppRoutes: React.FC = () => {
         <Route
           element={
             <ProtectedRoute
-              allowedRoles={[UserRole.intern, UserRole.secretary, UserRole.psychologist, UserRole.supervisor]}
+              allowedRoles={[UserRole.intern, UserRole.secretary, UserRole.manager, UserRole.supervisor]}
             />
           }
         >
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>
-        <Route element={<ProtectedRoute allowedRoles={[UserRole.secretary, UserRole.psychologist]} />}>
+        <Route element={<ProtectedRoute allowedRoles={[UserRole.secretary, UserRole.manager]} />}>
           <Route path="/user-management" element={<List />} />
           <Route path="/user-management/create" element={<CreateUser />} />
           <Route path="/user-management/edit/:id" element={<EditUser />} />

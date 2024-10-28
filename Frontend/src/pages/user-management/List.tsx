@@ -6,7 +6,6 @@ import { UserListResponse } from '../../api/models/UserManagement';
 import { showAlert } from '../../components/common/Alert';
 import { getUsers } from '../../api/user-management';
 import EditNoteIcon from '@mui/icons-material/EditNote';
-import PersonOffIcon from '@mui/icons-material/PersonOff';
 import { useNavigate } from 'react-router-dom';
 import { getTranslatedUserRole } from '../../models/Enums';
 
@@ -65,17 +64,6 @@ const UserListPage: React.FC = () => {
           </div>
         ),
       },
-      /*{{
-        
-        Header: 'Desativar',
-        accessor: '',
-        Cell: ({ row }) => (
-          <div className="flex items-center justify-between">
-            <PersonOffIcon className="text-purple-500" onClick={() => navigate(``)} />
-          </div>
-        ),
-      },
-      },*/
     ],
     [],
   );

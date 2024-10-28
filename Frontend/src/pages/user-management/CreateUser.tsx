@@ -174,7 +174,7 @@ const CreateUser: React.FC = () => {
             </TextField>
             <TextField
               label="Gênero"
-              name="genre"
+              name="gender"
               variant="outlined"
               fullWidth
               value={values.genre}
