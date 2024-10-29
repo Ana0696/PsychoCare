@@ -3,7 +3,6 @@ import { ApiResponse } from './models/ApiResponse';
 import { CreateUserRequest, EditUserRequest, GetUserResponse, UserListResponse } from './models/UserManagement';
 
 export const getUsers = async (): Promise<ApiResponse<UserListResponse[]>> => {
-  console.log('url');
   return await get<UserListResponse[]>('/UserManagement/list');
 };
 

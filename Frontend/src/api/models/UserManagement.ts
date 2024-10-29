@@ -20,6 +20,7 @@ export interface CreateUserRequest {
   password: string;
   role: UserRole;
   isActive: boolean;
+  supervisorId?: number;
   scheduleBlocks: ScheduleBlock[];
 }
 
@@ -33,6 +34,7 @@ export interface GetUserResponse {
   period?: string;
   role: UserRole;
   isActive: boolean;
+  supervisorId?: number;
   scheduleBlocks: ScheduleBlock[];
 }
 
@@ -46,6 +48,7 @@ export interface EditUserRequest {
   period?: string;
   role: UserRole;
   isActive: boolean;
+  supervisorId?: number;
   scheduleBlocks: ScheduleBlock[];
 }
 

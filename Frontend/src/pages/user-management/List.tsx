@@ -14,9 +14,7 @@ const UserListPage: React.FC = () => {
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    console.log(1);
     const fetchUsers = async () => {
-      console.log(2);
       try {
         const response = await getUsers();
 
@@ -31,10 +29,8 @@ const UserListPage: React.FC = () => {
         showAlert('Falha ao carregar usuários.', 'error');
       }
     };
-    console.log(3);
 
     fetchUsers();
-    console.log(4);
   }, []);
 
   const columns: Column<UserListResponse>[] = React.useMemo(

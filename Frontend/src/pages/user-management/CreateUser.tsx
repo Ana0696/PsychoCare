@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik, FieldArray, Form } from 'formik';
 import { Button, TextField, Checkbox, MenuItem } from '@mui/material';
 import * as Yup from 'yup';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
-import { CreateUserRequest } from '../../api/models/UserManagement';
+import { CreateUserRequest, UserListResponse } from '../../api/models/UserManagement';
 import { DayOfWeek, getTranslatedDayOfWeek, getTranslatedUserRole, UserRole } from '../../models/Enums';
-import { registerUser } from '../../api/user-management';
+import { getUsers, registerUser } from '../../api/user-management';
 import { useNavigate } from 'react-router-dom';
 import { showAlert } from '../../components/common/Alert';
 
@@ -25,6 +25,7 @@ const userSchema = Yup.object().shape({
   role: Yup.number().required('Required'),
   period: Yup.string().nullable(),
   gender: Yup.string().nullable(),
+  supervisorId: Yup.number().nullable(),
   scheduleBlocks: Yup.array().of(
     Yup.object().shape({
       startTime: Yup.string().required('Required'),
@@ -36,6 +37,8 @@ const userSchema = Yup.object().shape({
 });
 
 const CreateUser: React.FC = () => {
+  const [supervisor, setSupervisor] = useState<UserListResponse[]>([]);
+
   const initialValues: UserFormValues = {
     name: '',
     surname: '',
@@ -48,13 +51,23 @@ const CreateUser: React.FC = () => {
     confirmPassword: '',
     role: UserRole.secretary,
     isActive: true,
+    supervisorId: undefined,
     scheduleBlocks: [],
   };
   const navigate = useNavigate();
 
   const handleSubmit = async (values: UserFormValues) => {
     try {
-      const response = await registerUser(values);
+      const formattedTimeSpan = values.scheduleBlocks.map((block) => ({
+        ...block,
+        startTime: block.startTime.split(':').length < 3 ? `${block.startTime}:00` : block.startTime,
+        endTime: block.endTime.split(':').length < 3 ? `${block.endTime}:00` : block.endTime,
+      }));
+      const formattedValues = {
+        ...values,
+        scheduleBlocks: formattedTimeSpan,
+      };
+      const response = await registerUser(formattedValues);
       if (response.success === true) {
         showAlert('Usuário cadastrado com sucesso!', 'success');
         navigate('/user-management');
@@ -67,6 +80,26 @@ const CreateUser: React.FC = () => {
       showAlert('Login failed. Please check your credentials.', 'error');
     }
   };
+
+  React.useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await getUsers();
+
+        if (response.success === true) {
+          setSupervisor(response.data?.filter((o) => o.role === UserRole.supervisor)!);
+        } else if (response.message) {
+          showAlert(response.message, 'error');
+        } else {
+          showAlert('Falha ao efetuar login. Por favor, verifique suas credenciais.', 'error');
+        }
+      } catch (error) {
+        showAlert('Falha ao carregar usuários.', 'error');
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   return (
     <Formik initialValues={initialValues} validationSchema={userSchema} onSubmit={handleSubmit}>
@@ -159,6 +192,8 @@ const CreateUser: React.FC = () => {
 
                 if (roleValue !== UserRole.intern) {
                   setFieldValue('period', '');
+                  setFieldValue('supervisorId', undefined);
+                  setFieldValue('scheduleBlocks', []);
                 }
               }}
               error={touched.role && Boolean(errors.role)}
@@ -194,6 +229,25 @@ const CreateUser: React.FC = () => {
                 helperText={touched.period && errors.period}
               />
             )}
+            {values.role === UserRole.intern && (
+              <TextField
+                select
+                label="Orientador"
+                name="supervisorId"
+                variant="outlined"
+                fullWidth
+                value={values.supervisorId}
+                onChange={handleChange}
+                error={touched.supervisorId && Boolean(errors.supervisorId)}
+                helperText={touched.supervisorId && errors.supervisorId}
+              >
+                {supervisor.map((o) => (
+                  <MenuItem key={o.id} value={o.id}>
+                    {o.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+            )}
           </div>
 
           <div className="mt-4">
@@ -201,97 +255,101 @@ const CreateUser: React.FC = () => {
             <span>Usuário ativo</span>
           </div>
 
-          <div className="mt-6">
-            <h3 className="text-lg font-semibold mb-2">Bloqueio de agendamento</h3>
-            <FieldArray name="scheduleBlocks">
-              {({ remove, push }) => (
-                <div className="mb-2">
-                  {values.scheduleBlocks.map((block, index) => (
-                    <div key={index} className="bg-gray-100 p-4 rounded-lg mb-4 shadow-sm">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pb-2">
+          {values.role === UserRole.intern && (
+            <div className="mt-6">
+              <h3 className="text-lg font-semibold mb-2">Bloqueio de agendamento</h3>
+              <FieldArray name="scheduleBlocks">
+                {({ remove, push }) => (
+                  <div className="mb-2">
+                    {values.scheduleBlocks.map((block, index) => (
+                      <div key={index} className="bg-gray-100 p-4 rounded-lg mb-4 shadow-sm">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pb-2">
+                          <TextField
+                            label="Horário inicial"
+                            name={`scheduleBlocks.${index}.startTime`}
+                            type="time"
+                            fullWidth
+                            value={block.startTime}
+                            onChange={handleChange}
+                            error={
+                              touched.scheduleBlocks?.[index]?.startTime &&
+                              Boolean((errors.scheduleBlocks?.[index] as any)?.startTime)
+                            }
+                            helperText={
+                              touched.scheduleBlocks?.[index]?.startTime &&
+                              (errors.scheduleBlocks?.[index] as any)?.startTime
+                            }
+                          />
+                          <TextField
+                            label="Horário final"
+                            name={`scheduleBlocks.${index}.endTime`}
+                            type="time"
+                            fullWidth
+                            value={block.endTime}
+                            onChange={handleChange}
+                            error={
+                              touched.scheduleBlocks?.[index]?.endTime &&
+                              Boolean((errors.scheduleBlocks?.[index] as any)?.endTime)
+                            }
+                            helperText={
+                              touched.scheduleBlocks?.[index]?.endTime &&
+                              (errors.scheduleBlocks?.[index] as any)?.endTime
+                            }
+                          />
+                          <TextField
+                            select
+                            label="Dia da semana"
+                            name={`scheduleBlocks.${index}.weekDay`}
+                            fullWidth
+                            value={block.weekDay}
+                            onChange={handleChange}
+                            error={
+                              touched.scheduleBlocks?.[index]?.weekDay &&
+                              Boolean((errors.scheduleBlocks?.[index] as any)?.weekDay)
+                            }
+                            helperText={
+                              touched.scheduleBlocks?.[index]?.weekDay &&
+                              (errors.scheduleBlocks?.[index] as any)?.weekDay
+                            }
+                          >
+                            {Object.values(DayOfWeek)
+                              .filter((value) => typeof value === 'number')
+                              .map((value) => (
+                                <MenuItem key={value} value={value}>
+                                  {getTranslatedDayOfWeek(value as DayOfWeek)}
+                                </MenuItem>
+                              ))}
+                          </TextField>
+                        </div>
                         <TextField
-                          label="Horário inicial"
-                          name={`scheduleBlocks.${index}.startTime`}
-                          type="time"
+                          label="Observações"
+                          name={`scheduleBlocks.${index}.observation`}
                           fullWidth
-                          value={block.startTime}
+                          multiline
+                          rows={3}
+                          className="mt-4"
+                          value={block.observation}
                           onChange={handleChange}
-                          error={
-                            touched.scheduleBlocks?.[index]?.startTime &&
-                            Boolean((errors.scheduleBlocks?.[index] as any)?.startTime)
-                          }
-                          helperText={
-                            touched.scheduleBlocks?.[index]?.startTime &&
-                            (errors.scheduleBlocks?.[index] as any)?.startTime
-                          }
                         />
-                        <TextField
-                          label="Horário final"
-                          name={`scheduleBlocks.${index}.endTime`}
-                          type="time"
-                          fullWidth
-                          value={block.endTime}
-                          onChange={handleChange}
-                          error={
-                            touched.scheduleBlocks?.[index]?.endTime &&
-                            Boolean((errors.scheduleBlocks?.[index] as any)?.endTime)
-                          }
-                          helperText={
-                            touched.scheduleBlocks?.[index]?.endTime && (errors.scheduleBlocks?.[index] as any)?.endTime
-                          }
-                        />
-                        <TextField
-                          select
-                          label="Dia da semana"
-                          name={`scheduleBlocks.${index}.weekDay`}
-                          fullWidth
-                          value={block.weekDay}
-                          onChange={handleChange}
-                          error={
-                            touched.scheduleBlocks?.[index]?.weekDay &&
-                            Boolean((errors.scheduleBlocks?.[index] as any)?.weekDay)
-                          }
-                          helperText={
-                            touched.scheduleBlocks?.[index]?.weekDay && (errors.scheduleBlocks?.[index] as any)?.weekDay
-                          }
-                        >
-                          {Object.values(DayOfWeek)
-                            .filter((value) => typeof value === 'number')
-                            .map((value) => (
-                              <MenuItem key={value} value={value}>
-                                {getTranslatedDayOfWeek(value as DayOfWeek)}
-                              </MenuItem>
-                            ))}
-                        </TextField>
+                        <div className="flex justify-end mt-2">
+                          <RemoveCircleOutlineIcon color="secondary" onClick={() => remove(index)} />
+                        </div>
                       </div>
-                      <TextField
-                        label="Observações"
-                        name={`scheduleBlocks.${index}.observation`}
-                        fullWidth
-                        multiline
-                        rows={3}
-                        className="mt-4"
-                        value={block.observation}
-                        onChange={handleChange}
-                      />
-                      <div className="flex justify-end mt-2">
-                        <RemoveCircleOutlineIcon color="secondary" onClick={() => remove(index)} />
-                      </div>
-                    </div>
-                  ))}
-                  <Button
-                    variant="outlined"
-                    className="flex text-slate-900"
-                    onClick={() =>
-                      push({ startTime: '00:00:00', endTime: '00:00:00', weekDay: DayOfWeek.Monday, observation: '' })
-                    }
-                  >
-                    Adicionar bloqueio de agendamento
-                  </Button>
-                </div>
-              )}
-            </FieldArray>
-          </div>
+                    ))}
+                    <Button
+                      variant="outlined"
+                      className="flex text-slate-900"
+                      onClick={() =>
+                        push({ startTime: '00:00:00', endTime: '00:00:00', weekDay: DayOfWeek.Monday, observation: '' })
+                      }
+                    >
+                      Adicionar bloqueio de agendamento
+                    </Button>
+                  </div>
+                )}
+              </FieldArray>
+            </div>
+          )}
 
           <Button
             type="submit"
