@@ -5,9 +5,10 @@ import * as Yup from 'yup';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { CreateUserRequest, UserListResponse } from '../../api/models/UserManagement';
 import { DayOfWeek, getTranslatedDayOfWeek, getTranslatedUserRole, UserRole } from '../../models/Enums';
-import { getUsers, registerUser } from '../../api/user-management';
+import { getUsers, registerUser } from '../../api/requests/user-management';
 import { useNavigate } from 'react-router-dom';
 import { showAlert } from '../../components/common/Alert';
+import MaskedInput from 'react-text-mask';
 
 interface UserFormValues extends CreateUserRequest {
   confirmPassword: string;
@@ -17,6 +18,9 @@ const userSchema = Yup.object().shape({
   name: Yup.string().required('Required'),
   surname: Yup.string().required('Required'),
   birthDate: Yup.date().required('Required'),
+  phoneNumber: Yup.string()
+    .required('Required')
+    .test('is-valid-phone', 'Telefone incompleto', (value) => !!value && value.replace(/\D/g, '').length === 11),
   email: Yup.string().email('Invalid email').required('Required'),
   password: Yup.string().required('Required'),
   confirmPassword: Yup.string()
@@ -58,14 +62,14 @@ const CreateUser: React.FC = () => {
 
   const handleSubmit = async (values: UserFormValues) => {
     try {
-      const formattedTimeSpan = values.scheduleBlocks.map((block) => ({
-        ...block,
-        startTime: block.startTime.split(':').length < 3 ? `${block.startTime}:00` : block.startTime,
-        endTime: block.endTime.split(':').length < 3 ? `${block.endTime}:00` : block.endTime,
-      }));
       const formattedValues = {
         ...values,
-        scheduleBlocks: formattedTimeSpan,
+        phoneNumber: values.phoneNumber.replace(/\D/g, ''),
+        scheduleBlocks: values.scheduleBlocks.map((block) => ({
+          ...block,
+          startTime: block.startTime.includes(':') ? `${block.startTime}:00` : block.startTime,
+          endTime: block.endTime.includes(':') ? `${block.endTime}:00` : block.endTime,
+        })),
       };
       const response = await registerUser(formattedValues);
       if (response.success === true) {
@@ -138,13 +142,23 @@ const CreateUser: React.FC = () => {
               error={touched.email && Boolean(errors.email)}
               helperText={touched.email && errors.email}
             />
-            <TextField
-              label="Telefone"
-              name="phoneNumber"
-              variant="outlined"
-              fullWidth
+            <MaskedInput
+              mask={['(', /[1-9]/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+              placeholder="(DDD) 00000-0000"
               value={values.phoneNumber}
-              onChange={handleChange}
+              onChange={(e) => setFieldValue('phoneNumber', e.target.value)}
+              render={(ref, props) => (
+                <TextField
+                  {...props}
+                  inputRef={ref}
+                  label="Telefone"
+                  name="phoneNumber"
+                  variant="outlined"
+                  fullWidth
+                  error={touched.phoneNumber && Boolean(errors.phoneNumber)}
+                  helperText={touched.phoneNumber && errors.phoneNumber}
+                />
+              )}
             />
             <TextField
               label="Senha"

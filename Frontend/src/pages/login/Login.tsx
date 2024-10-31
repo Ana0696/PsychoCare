@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import { LoginRequest } from '../../api/models/Auth';
 import useAuth from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import { login as loginApi } from '../../api/auth';
+import { login as loginApi } from '../../api/requests/auth';
 import { showAlert } from '../../components/common/Alert';
 
 interface LoginValues extends LoginRequest {

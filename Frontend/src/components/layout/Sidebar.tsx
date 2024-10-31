@@ -5,6 +5,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import InsertInvitationIcon from '@mui/icons-material/InsertInvitation';
 import ContentPasteIcon from '@mui/icons-material/ContentPaste';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import useAuth from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 
@@ -36,6 +37,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
                 label="Gestão de usuários"
                 onClick={() => navigate('/user-management')}
               />
+              <SidebarItem icon={<AssignmentTurnedInIcon />} label="Triagem" onClick={() => navigate('/screening')} />
               <SidebarItem icon={<InsertInvitationIcon />} label="Agenda" onClick={() => navigate('/agenda')} />
               <SidebarItem icon={<ContentPasteIcon />} label="Pastas" onClick={() => navigate('/folders')} />
               <SidebarItem icon={<LocalAtmIcon />} label="Financeiro" onClick={() => navigate('/financial')} />

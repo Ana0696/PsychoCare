@@ -20,7 +20,7 @@ const DefaultLayout: React.FC = () => {
       <div className="flex flex-1 overflow-hidden">
         <Navbar toggleSidebar={toggleSidebar} />
         <main className="flex-1 overflow-auto mt-14 lg:ml-60">
-          <div className="container min-h-full mx-auto px-4 py-6 bg-gray-100">
+          <div className="container min-h-full min-w-full mx-auto px-4 py-6 bg-gray-100">
             <Outlet />
           </div>
         </main>

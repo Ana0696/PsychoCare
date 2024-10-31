@@ -22,11 +22,13 @@ const StyledTableContainer = styled(TableContainer)({
 
 const StyledTableCell = styled(TableCell)({
   whiteSpace: 'nowrap',
+  textAlign: 'center',
 });
 
 const StyledHeaderCell = styled(TableCell)({
   fontWeight: 'bold',
   whiteSpace: 'nowrap',
+  textAlign: 'center',
 });
 
 const SearchBar = styled('div')({
@@ -87,11 +89,13 @@ const CustomTable = <T extends { id: number }>({ columns, data }: CustomTablePro
           <Table {...getTableProps()}>
             <TableHead>
               {headerGroups.map((headerGroup) => (
-                <TableRow {...headerGroup.getHeaderGroupProps()}>
+                <TableRow {...headerGroup.getHeaderGroupProps()} style={{ textAlign: 'center' }}>
                   {headerGroup.headers.map((column) => (
                     <StyledHeaderCell {...column.getHeaderProps(column.getSortByToggleProps())}>
                       {column.render('Header')}
-                      <TableSortLabel active={column.isSorted} direction={column.isSortedDesc ? 'desc' : 'asc'} />
+                      {column.isSorted && (
+                        <TableSortLabel active={column.isSorted} direction={column.isSortedDesc ? 'desc' : 'asc'} />
+                      )}
                     </StyledHeaderCell>
                   ))}
                 </TableRow>

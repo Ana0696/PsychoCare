@@ -4,10 +4,11 @@ import { Button, TextField, Checkbox, MenuItem } from '@mui/material';
 import * as Yup from 'yup';
 import { EditUserRequest, UserListResponse } from '../../api/models/UserManagement';
 import { DayOfWeek, getTranslatedDayOfWeek, getTranslatedUserRole, UserRole } from '../../models/Enums';
-import { getUser, getUsers, putUser } from '../../api/user-management';
+import { getUser, getUsers, putUser } from '../../api/requests/user-management';
 import { showAlert } from '../../components/common/Alert';
 import { useNavigate, useParams } from 'react-router-dom';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import MaskedInput from 'react-text-mask';
 
 interface UserFormValues extends EditUserRequest {}
 
@@ -15,6 +16,9 @@ const userSchema = Yup.object().shape({
   name: Yup.string().required('Required'),
   surname: Yup.string().required('Required'),
   birthDate: Yup.date().required('Required'),
+  phoneNumber: Yup.string()
+    .required('Required')
+    .test('is-valid-phone', 'Telefone incompleto', (value) => !!value && value.replace(/\D/g, '').length === 11),
   email: Yup.string().email('Invalid email').required('Required'),
   role: Yup.number().required('Required'),
   period: Yup.string().nullable(),
@@ -82,14 +86,14 @@ const EditUser: React.FC = () => {
 
   const handleSubmit = async (values: UserFormValues) => {
     try {
-      const formattedTimeSpan = values.scheduleBlocks.map((block) => ({
-        ...block,
-        startTime: block.startTime.split(':').length < 3 ? `${block.startTime}:00` : block.startTime,
-        endTime: block.endTime.split(':').length < 3 ? `${block.endTime}:00` : block.endTime,
-      }));
       const formattedValues = {
         ...values,
-        scheduleBlocks: formattedTimeSpan,
+        phoneNumber: values.phoneNumber.replace(/\D/g, ''),
+        scheduleBlocks: values.scheduleBlocks.map((block) => ({
+          ...block,
+          startTime: block.startTime.split(':').length < 3 ? `${block.startTime}:00` : block.startTime,
+          endTime: block.endTime.split(':').length < 3 ? `${block.endTime}:00` : block.endTime,
+        })),
       };
       const response = await putUser(userId, formattedValues);
       if (response.success === true) {
@@ -146,13 +150,23 @@ const EditUser: React.FC = () => {
               error={touched.email && Boolean(errors.email)}
               helperText={touched.email && errors.email}
             />
-            <TextField
-              label="Telefone"
-              name="phoneNumber"
-              variant="outlined"
-              fullWidth
+            <MaskedInput
+              mask={['(', /[1-9]/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+              placeholder="(DDD) 00000-0000"
               value={values.phoneNumber}
-              onChange={handleChange}
+              onChange={(e) => setFieldValue('phoneNumber', e.target.value)}
+              render={(ref, props) => (
+                <TextField
+                  {...props}
+                  inputRef={ref}
+                  label="Telefone"
+                  name="phoneNumber"
+                  variant="outlined"
+                  fullWidth
+                  error={touched.phoneNumber && Boolean(errors.phoneNumber)}
+                  helperText={touched.phoneNumber && errors.phoneNumber}
+                />
+              )}
             />
             <TextField
               label="Data de nascimento"

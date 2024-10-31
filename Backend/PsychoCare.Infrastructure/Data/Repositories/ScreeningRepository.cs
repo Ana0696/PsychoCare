@@ -23,7 +23,7 @@ namespace PsychoCare.Infrastructure.Data.Repositories
 
         public async Task<IEnumerable<Screening>> GetList()
         {
-            return await _context.Screenings.Where(s => s.Disabled == false).OrderBy(s => s.Urgency).ThenByDescending(s => s.ContactDate).ToListAsync();
+            return await _context.Screenings.Where(s => s.Disabled == false).OrderByDescending(s => s.Urgency).ThenByDescending(s => s.ContactDate).ToListAsync();
         }
 
         public async Task<Screening?> GetById(int id)

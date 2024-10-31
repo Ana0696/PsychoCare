@@ -4,7 +4,7 @@ import { Button } from '@mui/material';
 import CustomTable from '../../components/common/CustomTable';
 import { UserListResponse } from '../../api/models/UserManagement';
 import { showAlert } from '../../components/common/Alert';
-import { getUsers } from '../../api/user-management';
+import { getUsers } from '../../api/requests/user-management';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import { useNavigate } from 'react-router-dom';
 import { getTranslatedUserRole } from '../../models/Enums';
@@ -17,16 +17,16 @@ const UserListPage: React.FC = () => {
     const fetchUsers = async () => {
       try {
         const response = await getUsers();
-
+        console.log(response);
         if (response.success === true) {
           setUsers(response.data!);
         } else if (response.message) {
           showAlert(response.message, 'error');
         } else {
-          showAlert('Falha ao efetuar login. Por favor, verifique suas credenciais.', 'error');
+          showAlert('Falha ao carregar a lista. Por favor, verifique suas credenciais.', 'error');
         }
       } catch (error) {
-        showAlert('Falha ao carregar usuários.', 'error');
+        showAlert('Falha ao carregar a lista. Por favor, verifique suas credenciais.', 'error');
       }
     };
 
@@ -52,7 +52,7 @@ const UserListPage: React.FC = () => {
         Header: 'Editar',
         accessor: 'id',
         Cell: ({ row }) => (
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-center gap-1">
             <EditNoteIcon
               className="text-teal-700"
               onClick={() => navigate(`/user-management/edit/${row.values.id}`)}
@@ -69,9 +69,7 @@ const UserListPage: React.FC = () => {
       <div className="flex flex-col lg:flex-row justify-between mb-4">
         <div className="flex flex-col gap-3">
           <h2 className="text-xl font-bold">Usuários do sistema</h2>
-          <p className="text-gray-600">
-            Uma lista de todos os usuários da sua conta, incluindo nome, cargo, e-mail e função.
-          </p>
+          <p className="text-gray-600">Uma lista de usuários.</p>
         </div>
         <Button
           variant="contained"

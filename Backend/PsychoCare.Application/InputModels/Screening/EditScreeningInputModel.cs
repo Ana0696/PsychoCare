@@ -10,6 +10,5 @@
         public bool Urgency { get; private set; }
         public bool SpecialNeeds { get; private set; }
         public string? Observation { get; private set; }
-        public bool Disabled { get; private set; }
     }
 }

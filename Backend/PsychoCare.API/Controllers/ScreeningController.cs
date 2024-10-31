@@ -30,10 +30,9 @@ namespace PsychoCare.API.Controllers
             return BadRequest(response);
         }
 
-
         [Authorize(Roles = "secretary,manager,intern")]
         [HttpGet("list")]
-        [ProducesResponseType(typeof(Response<ScreeningListViewModel>), 200)]
+        [ProducesResponseType(typeof(Response<IEnumerable<ScreeningListViewModel>>), 200)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetList()
         {
@@ -62,7 +61,7 @@ namespace PsychoCare.API.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(Response), 200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> EditById(int id, EditScreeningInputModel request)
+        public async Task<IActionResult> EditById(int id, [FromBody] EditScreeningInputModel request)
         {
             var response = await _screeningService.EditById(id, request);
             if (response?.Success == true)

@@ -38,7 +38,8 @@ namespace PsychoCare.Application.Services.Implementations
                     BirthDate = s.BirthDate,
                     PhoneNumber = s.PhoneNumber,
                     Urgency = s.Urgency,
-                    SpecialNeeds = s.SpecialNeeds
+                    SpecialNeeds = s.SpecialNeeds,
+                    ContactDate = s.ContactDate
                 }
             ));
         }
