@@ -224,13 +224,23 @@ const CreateUser: React.FC = () => {
             <TextField
               label="Gênero"
               name="gender"
-              variant="outlined"
+              select
               fullWidth
+              variant="outlined"
               value={values.gender}
               onChange={handleChange}
               error={touched.gender && Boolean(errors.gender)}
               helperText={touched.gender && errors.gender}
-            />
+            >
+              <MenuItem value="">Prefere não informar</MenuItem>
+              <MenuItem value="Masculino">Masculino</MenuItem>
+              <MenuItem value="Feminino">Feminino</MenuItem>
+              <MenuItem value="Agênero">Agênero</MenuItem>
+              <MenuItem value="Gênero Fluido">Gênero Fluido</MenuItem>
+              <MenuItem value="Não Binário">Não Binário</MenuItem>
+              <MenuItem value="Transgênero">Transgênero</MenuItem>
+              <MenuItem value="Agênero">Outro</MenuItem>
+            </TextField>
             {values.role === UserRole.intern && (
               <TextField
                 label="Período"

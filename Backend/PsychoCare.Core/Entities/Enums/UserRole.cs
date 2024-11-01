@@ -5,6 +5,6 @@
         intern = 1,
         secretary,
         manager,
-        supervisor,
+        supervisor
     }
 }

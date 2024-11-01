@@ -14,7 +14,7 @@ interface LoginValues extends LoginRequest {
 const Login: React.FC = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
-  const initialValues: LoginValues = { email: '', password: '', rememberMe: false };
+  const initialValues: LoginValues = { email: '', password: '', rememberMe: true };
 
   const validationSchema = Yup.object({
     email: Yup.string().email('Invalid email address').required('Campo obrigatório'),

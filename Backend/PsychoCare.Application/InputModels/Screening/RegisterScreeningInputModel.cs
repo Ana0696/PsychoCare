@@ -2,6 +2,7 @@
 {
     public class RegisterScreeningInputModel
     {
+        public int? PatientId { get; set; }
         public string Name { get; set; }
         public DateTime BirthDate { get; set; }
         public string? Gender { get; set; }

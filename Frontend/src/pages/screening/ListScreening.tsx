@@ -3,7 +3,6 @@ import { Column } from 'react-table';
 import { Button } from '@mui/material';
 import CustomTable from '../../components/common/CustomTable';
 import { showAlert } from '../../components/common/Alert';
-import { useNavigate } from 'react-router-dom';
 import { ScreeningListResponse } from '../../api/models/Screening';
 import { getScreenins } from '../../api/requests/screening';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
@@ -12,10 +11,18 @@ import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import NewScreeningModal from '../../components/screening/NewScreeningModal';
+import ScreeningDetailsModal from '../../components/screening/ScreeningDetailsModal';
+import CancelScreeningModal from '../../components/screening/CancelScreeningModal';
+import EditScreeningModal from '../../components/screening/EditScreeningModal';
 
 const ScreeningListPage: React.FC = () => {
   const [scrennings, setScrennings] = useState<ScreeningListResponse[]>([]);
-  const navigate = useNavigate();
+  const [modalNewIsOpen, setModalNewIsOpen] = useState(false);
+  const [selectedScreeningId, setSelectedScreeningId] = useState<number | null>(null);
+  const [isDetailsModalOpen, setDetailsModalOpen] = useState(false);
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [isCancelModalOpen, setCancelModalOpen] = useState(false);
 
   const calculateAge = (birthDate: string): number => {
     const birth = new Date(birthDate);
@@ -39,22 +46,43 @@ const ScreeningListPage: React.FC = () => {
     });
   };
 
-  React.useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await getScreenins();
-        if (response.success === true) {
-          setScrennings(response.data!);
-        } else if (response.message) {
-          showAlert(response.message, 'error');
-        } else {
-          showAlert('Falha ao carregar a lista. Por favor, verifique suas credenciais.', 'error');
-        }
-      } catch (error) {
+  const handleOpenModalNew = () => setModalNewIsOpen(true);
+  const handleCloseModalNew = () => setModalNewIsOpen(false);
+
+  const handleDetailsOpen = (id: number) => {
+    setSelectedScreeningId(id);
+    setDetailsModalOpen(true);
+  };
+  const handleDetailsClose = () => setDetailsModalOpen(false);
+
+  const handleEditOpen = (id: number) => {
+    setSelectedScreeningId(id);
+    setEditModalOpen(true);
+  };
+  const handleEditClose = () => setEditModalOpen(false);
+
+  const handleCancelOpen = (id: number) => {
+    setSelectedScreeningId(id);
+    setCancelModalOpen(true);
+  };
+  const handleCancelClose = () => setCancelModalOpen(false);
+
+  const fetchUsers = async () => {
+    try {
+      const response = await getScreenins();
+      if (response.success === true) {
+        setScrennings(response.data!);
+      } else if (response.message) {
+        showAlert(response.message, 'error');
+      } else {
         showAlert('Falha ao carregar a lista. Por favor, verifique suas credenciais.', 'error');
       }
-    };
+    } catch (error) {
+      showAlert('Falha ao carregar a lista. Por favor, verifique suas credenciais.', 'error');
+    }
+  };
 
+  React.useEffect(() => {
     fetchUsers();
   }, []);
 
@@ -98,15 +126,15 @@ const ScreeningListPage: React.FC = () => {
       {
         Header: 'Ações',
         accessor: 'id',
-        Cell: () => (
+        Cell: ({ value }: { value: number }) => (
           <div className="flex items-center justify-center gap-1">
-            <button className="icon-button" aria-label="View">
+            <button onClick={() => handleDetailsOpen(value)} className="icon-button" aria-label="View">
               <VisibilityIcon />
             </button>
-            <button className="icon-button" aria-label="Edit">
+            <button onClick={() => handleEditOpen(value)} className="icon-button" aria-label="Edit">
               <EditIcon />
             </button>
-            <button className="icon-button" aria-label="Delete">
+            <button onClick={() => handleCancelOpen(value)} className="icon-button" aria-label="Delete">
               <DeleteIcon />
             </button>
           </div>
@@ -126,12 +154,31 @@ const ScreeningListPage: React.FC = () => {
         <Button
           variant="contained"
           className="mt-4 lg:mt-0 bg-gradient-to-br from-slate-900 to-slate-700"
-          onClick={() => navigate(`/user-management/create`)}
+          onClick={handleOpenModalNew}
         >
           Nova triagem
         </Button>
       </div>
       <CustomTable columns={columns} data={scrennings} />
+
+      <NewScreeningModal open={modalNewIsOpen} onClose={handleCloseModalNew} onSubmitSuccess={fetchUsers} />
+      <ScreeningDetailsModal
+        open={isDetailsModalOpen}
+        onClose={handleDetailsClose}
+        screeningId={selectedScreeningId ?? 0}
+      />
+      <EditScreeningModal
+        open={isEditModalOpen}
+        onClose={handleEditClose}
+        onSubmitSuccess={fetchUsers}
+        screeningId={selectedScreeningId ?? 0}
+      />
+      <CancelScreeningModal
+        open={isCancelModalOpen}
+        onClose={handleCancelClose}
+        onSubmitSuccess={fetchUsers}
+        screeningId={selectedScreeningId ?? 0}
+      />
     </div>
   );
 };

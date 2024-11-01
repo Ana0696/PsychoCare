@@ -15,5 +15,5 @@ export const getUser = async (id: number): Promise<ApiResponse<GetUserResponse>>
 };
 
 export const putUser = async (id: number, data: EditUserRequest): Promise<ApiResponse> => {
-  return await put<void, GetUserResponse>(`/UserManagement/${id}`, data);
+  return await put<void, EditUserRequest>(`/UserManagement/${id}`, data);
 };
