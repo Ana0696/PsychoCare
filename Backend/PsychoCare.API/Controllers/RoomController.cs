@@ -1,30 +1,30 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PsychoCare.Application.InputModels.UserManagement;
+using PsychoCare.Application.InputModels.Room;
 using PsychoCare.Application.Services.Interfaces;
 using PsychoCare.Application.ViewModels;
-using PsychoCare.Application.ViewModels.UserManagement;
+using PsychoCare.Application.ViewModels.Room;
 
 namespace PsychoCare.API.Controllers
 {
     [Route("api/[controller]")]
     [Authorize(Roles = "secretary,manager")]
     [ApiController]
-    public class UserManagementController : ControllerBase
+    public class RoomController : ControllerBase
     {
-        private readonly IUserManagementService _userManagementService;
+        private readonly IRoomService _roomService;
 
-        public UserManagementController(IUserManagementService userManagementService)
+        public RoomController(IRoomService roomService)
         {
-            _userManagementService = userManagementService;
+            _roomService = roomService;
         }
 
         [HttpPost("register")]
         [ProducesResponseType(typeof(Response), 200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> Register(RegisterInputModel request)
+        public async Task<IActionResult> Register(RegisterRoomInputModel request)
         {
-            var response = await _userManagementService.Register(request);
+            var response = await _roomService.Register(request);
             if (response?.Success == true)
                 return Ok(response);
 
@@ -32,11 +32,11 @@ namespace PsychoCare.API.Controllers
         }
 
         [HttpGet("list")]
-        [ProducesResponseType(typeof(Response<IEnumerable<UserListViewModel>>), 200)]
+        [ProducesResponseType(typeof(Response<IEnumerable<RoomViewModel>>), 200)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetList()
         {
-            var response = await _userManagementService.GetList();
+            var response = await _roomService.GetList();
             if (response?.Success == true)
                 return Ok(response);
 
@@ -44,11 +44,11 @@ namespace PsychoCare.API.Controllers
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(Response<UserViewModel>), 200)]
+        [ProducesResponseType(typeof(Response<RoomViewModel>), 200)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetById(int id)
         {
-            var response = await _userManagementService.GetById(id);
+            var response = await _roomService.GetById(id);
             if (response?.Success == true)
                 return Ok(response);
 
@@ -59,16 +59,26 @@ namespace PsychoCare.API.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(Response), 200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> EditById(int id, EditUserInputModel request)
+        public async Task<IActionResult> EditById(int id, RegisterRoomInputModel request)
         {
-            var response = await _userManagementService.EditById(id, request);
+            var response = await _roomService.EditById(id, request);
             if (response?.Success == true)
                 return Ok(response);
 
             return BadRequest(response);
         }
 
+        //Disable
+        [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(Response), 200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> DisableById(int id)
+        {
+            var response = await _roomService.DisableById(id);
+            if (response?.Success == true)
+                return Ok(response);
 
-
+            return BadRequest(response);
+        }
     }
 }

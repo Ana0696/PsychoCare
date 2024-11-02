@@ -11,6 +11,7 @@ import EditUser from '../pages/user-management/EditUser';
 import { UserRole } from '../models/Enums';
 import ListUser from '../pages/user-management/ListUser';
 import ListScreening from '../pages/screening/ListScreening';
+import ListRoom from '../pages/room/ListRoom';
 
 const AppRoutes: React.FC = () => {
   const { isAuthenticated, loading } = useAuth();
@@ -35,6 +36,7 @@ const AppRoutes: React.FC = () => {
           <Route path="/user-management" element={<ListUser />} />
           <Route path="/user-management/create" element={<CreateUser />} />
           <Route path="/user-management/edit/:id" element={<EditUser />} />
+          <Route path="/room" element={<ListRoom />} />
         </Route>
         <Route element={<ProtectedRoute allowedRoles={[UserRole.secretary, UserRole.manager, UserRole.intern]} />}>
           <Route path="/screening" element={<ListScreening />} />

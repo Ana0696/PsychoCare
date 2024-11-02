@@ -1,9 +1,7 @@
 ﻿using PsychoCare.Application.InputModels.Screening;
-using PsychoCare.Application.InputModels.UserManagement;
 using PsychoCare.Application.Services.Interfaces;
 using PsychoCare.Application.ViewModels;
 using PsychoCare.Application.ViewModels.Screening;
-using PsychoCare.Application.ViewModels.UserManagement;
 using PsychoCare.Core.Entities;
 using PsychoCare.Core.Interfaces;
 
@@ -13,15 +11,15 @@ namespace PsychoCare.Application.Services.Implementations
     {
         private readonly IScreeningRepository _screeningRepository;
 
-        public ScreeningService(IScreeningRepository screeningRepository) 
-        { 
+        public ScreeningService(IScreeningRepository screeningRepository)
+        {
             _screeningRepository = screeningRepository;
         }
 
         public async Task<Response> Register(RegisterScreeningInputModel request)
         {
-            Screening newScreening = new Screening(request.Name, request.BirthDate, request.Gender,request.PhoneNumber, request.Email, request.Urgency, request.SpecialNeeds, request.Observation);
-            
+            Screening newScreening = new Screening(request.Name, request.BirthDate, request.Gender, request.PhoneNumber, request.Email, request.Urgency, request.SpecialNeeds, request.Observation);
+
             await _screeningRepository.RegisterScreening(newScreening);
             return new Response();
         }
@@ -61,10 +59,10 @@ namespace PsychoCare.Application.Services.Implementations
                 Gender = screening.Gender,
                 Email = screening.Email,
                 PhoneNumber = screening.PhoneNumber,
-                Urgency= screening.Urgency,
+                Urgency = screening.Urgency,
                 SpecialNeeds = screening.SpecialNeeds,
                 Observation = screening.Observation
-                
+
             };
 
             return new Response<ScreeningViewModel>(screeningVm);

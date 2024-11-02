@@ -128,13 +128,13 @@ const ScreeningListPage: React.FC = () => {
         accessor: 'id',
         Cell: ({ value }: { value: number }) => (
           <div className="flex items-center justify-center gap-1">
-            <button onClick={() => handleDetailsOpen(value)} className="icon-button" aria-label="View">
+            <button onClick={() => handleDetailsOpen(value)} className="icon-button text-blue-950" aria-label="View">
               <VisibilityIcon />
             </button>
-            <button onClick={() => handleEditOpen(value)} className="icon-button" aria-label="Edit">
+            <button onClick={() => handleEditOpen(value)} className="icon-button text-yellow-800" aria-label="Edit">
               <EditIcon />
             </button>
-            <button onClick={() => handleCancelOpen(value)} className="icon-button" aria-label="Delete">
+            <button onClick={() => handleCancelOpen(value)} className="icon-button text-red-900" aria-label="Delete">
               <DeleteIcon />
             </button>
           </div>

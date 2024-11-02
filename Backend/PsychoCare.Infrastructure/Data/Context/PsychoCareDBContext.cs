@@ -10,6 +10,7 @@ namespace PsychoCare.Infrastructure.Data.Context
         public DbSet<User> Users { get; set; }
         public DbSet<ScheduleBlock> ScheduleBlocks { get; set; }
         public DbSet<Screening> Screenings { get; set; }
+        public DbSet<Room> Rooms { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

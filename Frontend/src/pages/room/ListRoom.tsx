@@ -2,25 +2,27 @@ import React, { useState } from 'react';
 import { Column } from 'react-table';
 import { Button } from '@mui/material';
 import CustomTable from '../../components/common/CustomTable';
-import { UserListResponse } from '../../api/models/UserManagement';
 import { showAlert } from '../../components/common/Alert';
-import { getUsers } from '../../api/requests/user-management';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
-import { getTranslatedUserRole } from '../../models/Enums';
+import { RoomResponse } from '../../api/models/Room';
+import { getRooms } from '../../api/requests/room';
+import GroupsIcon from '@mui/icons-material/Groups';
+import AccessibleIcon from '@mui/icons-material/Accessible';
+import EscalatorWarningIcon from '@mui/icons-material/EscalatorWarning';
 
-const UserListPage: React.FC = () => {
-  const [users, setUsers] = useState<UserListResponse[]>([]);
+const RoomListPage: React.FC = () => {
+  const [rooms, setRooms] = useState<RoomResponse[]>([]);
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchRooms = async () => {
       try {
-        const response = await getUsers();
+        const response = await getRooms();
         console.log(response);
         if (response.success === true) {
-          setUsers(response.data!);
+          setRooms(response.data!);
         } else if (response.message) {
           showAlert(response.message, 'error');
         } else {
@@ -31,23 +33,24 @@ const UserListPage: React.FC = () => {
       }
     };
 
-    fetchUsers();
+    fetchRooms();
   }, []);
 
-  const columns: Column<UserListResponse>[] = React.useMemo(
+  const columns: Column<RoomResponse>[] = React.useMemo(
     () => [
       {
         Header: 'Nome',
         accessor: 'name',
       },
       {
-        Header: 'Permissão',
-        accessor: 'role',
-        Cell: ({ row }) => <>{getTranslatedUserRole(row.values.role)}</>,
-      },
-      {
-        Header: 'E-mail',
-        accessor: 'email',
+        Header: 'Atenção',
+        Cell: ({ row }: { row: { original: RoomResponse } }) => (
+          <div className="flex items-center justify-center gap-1">
+            {row.original.allowGroupSession && <GroupsIcon color="info" titleAccess="Sessões em grupo" />}
+            {row.original.specialNeeds && <AccessibleIcon color="info" titleAccess="Necessidades Especiais" />}
+            {row.original.pediatric && <EscalatorWarningIcon color="info" titleAccess="Pediatria" />}
+          </div>
+        ),
       },
       {
         Header: 'Editar',
@@ -55,7 +58,7 @@ const UserListPage: React.FC = () => {
         Cell: ({ row }) => (
           <div className="flex items-center justify-center gap-1">
             <button
-              onClick={() => navigate(`/user-management/edit/${row.values.id}`)}
+              onClick={() => navigate(`/room/edit/${row.values.id}`)}
               className="icon-button text-yellow-800"
               aria-label="Edit"
             >
@@ -75,20 +78,20 @@ const UserListPage: React.FC = () => {
     <div className="p-6 rounded-lg shadow-md bg-slate-200">
       <div className="flex flex-col lg:flex-row justify-between mb-4">
         <div className="flex flex-col gap-3">
-          <h2 className="text-xl font-bold">Usuários do sistema</h2>
-          <p className="text-gray-600">Uma lista de usuários.</p>
+          <h2 className="text-xl font-bold">Salas</h2>
+          <p className="text-gray-600">Salas de atendimento.</p>
         </div>
         <Button
           variant="contained"
           className="mt-4 lg:mt-0 bg-gradient-to-br from-slate-900 to-slate-700"
-          onClick={() => navigate(`/user-management/create`)}
+          onClick={() => navigate(`/room/create`)}
         >
-          Novo usuário
+          Nova sala
         </Button>
       </div>
-      <CustomTable columns={columns} data={users} />
+      <CustomTable columns={columns} data={rooms} />
     </div>
   );
 };
 
-export default UserListPage;
+export default RoomListPage;
