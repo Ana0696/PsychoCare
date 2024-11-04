@@ -17,8 +17,8 @@ const screeningSchema = Yup.object().shape({
     .required('Telefone é obrigatório')
     .test('is-valid-phone', 'Telefone incompleto', (value) => !!value && value.replace(/\D/g, '').length === 11),
   email: Yup.string().email('Email inválido').nullable(),
-  urgency: Yup.boolean().required(),
-  specialNeeds: Yup.boolean().required(),
+  urgency: Yup.boolean().required('Campo obrigatório'),
+  specialNeeds: Yup.boolean().required('Campo obrigatório'),
   observation: Yup.string().nullable(),
 });
 

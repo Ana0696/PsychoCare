@@ -4,7 +4,8 @@ import { Button } from '@mui/material';
 import CustomTable from '../../components/common/CustomTable';
 import { showAlert } from '../../components/common/Alert';
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import { useNavigate } from 'react-router-dom';
 import { RoomResponse } from '../../api/models/Room';
 import { getRooms } from '../../api/requests/room';
@@ -20,7 +21,6 @@ const RoomListPage: React.FC = () => {
     const fetchRooms = async () => {
       try {
         const response = await getRooms();
-        console.log(response);
         if (response.success === true) {
           setRooms(response.data!);
         } else if (response.message) {
@@ -53,6 +53,16 @@ const RoomListPage: React.FC = () => {
         ),
       },
       {
+        Header: 'Status',
+        accessor: 'isActive',
+        Cell: ({ row }) => (
+          <div className="flex items-center justify-center gap-1">
+            {row.values.isActive && <RadioButtonCheckedIcon className="text-green-700" titleAccess="Ativado" />}
+            {!row.values.isActive && <RadioButtonUncheckedIcon className="text-red-700" titleAccess="Desativado" />}
+          </div>
+        ),
+      },
+      {
         Header: 'Editar',
         accessor: 'id',
         Cell: ({ row }) => (
@@ -63,9 +73,6 @@ const RoomListPage: React.FC = () => {
               aria-label="Edit"
             >
               <EditIcon />
-            </button>
-            <button className="icon-button text-red-900" aria-label="Delete">
-              <DeleteIcon />
             </button>
           </div>
         ),
@@ -81,13 +88,15 @@ const RoomListPage: React.FC = () => {
           <h2 className="text-xl font-bold">Salas</h2>
           <p className="text-gray-600">Salas de atendimento.</p>
         </div>
-        <Button
-          variant="contained"
-          className="mt-4 lg:mt-0 bg-gradient-to-br from-slate-900 to-slate-700"
-          onClick={() => navigate(`/room/create`)}
-        >
-          Nova sala
-        </Button>
+        <div>
+          <Button
+            variant="contained"
+            className="mt-4 lg:mt-0 bg-gradient-to-br from-slate-900 to-slate-700"
+            onClick={() => navigate(`/room/create`)}
+          >
+            Nova sala
+          </Button>
+        </div>
       </div>
       <CustomTable columns={columns} data={rooms} />
     </div>

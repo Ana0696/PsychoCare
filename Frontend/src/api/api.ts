@@ -22,6 +22,24 @@ api.interceptors.request.use(
   },
 );
 
+// Interceptor para redirecionar em caso de erros 401 e 403
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (axios.isAxiosError(error) && error.response) {
+      const status = error.response.status;
+      if (status === 401) {
+        // Redirecionar para a página de login
+        window.location.href = '/login';
+      } else if (status === 403) {
+        // Redirecionar para a dashboard
+        window.location.href = '/dashboard';
+      }
+    }
+    return Promise.reject(error);
+  },
+);
+
 export const get = async <T>(url: string): Promise<ApiResponse<T>> => {
   try {
     const response: AxiosResponse<ApiResponse<T>> = await api.get(url);

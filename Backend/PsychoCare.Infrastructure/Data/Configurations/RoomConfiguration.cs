@@ -13,7 +13,7 @@ namespace PsychoCare.Infrastructure.Data.Configurations
             builder.Property(r => r.AllowGroupSession).IsRequired();
             builder.Property(r => r.SpecialNeeds).IsRequired();
             builder.Property(r => r.Pediatric).IsRequired();
-            builder.Property(r => r.Disabled).IsRequired();
+            builder.Property(r => r.IsActive).IsRequired();
         }
     }
 }

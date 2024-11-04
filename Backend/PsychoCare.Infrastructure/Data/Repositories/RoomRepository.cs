@@ -23,12 +23,12 @@ namespace PsychoCare.Infrastructure.Data.Repositories
 
         public async Task<IEnumerable<Room>> GetList()
         {
-            return await _context.Rooms.Where(r => r.Disabled == false).OrderBy(r => r.Name).ToListAsync();
+            return await _context.Rooms.OrderBy(r => r.Name).ToListAsync();
         }
 
         public async Task<Room?> GetById(int id)
         {
-            return await _context.Rooms.Where(r => r.Id == id && r.Disabled == false).FirstOrDefaultAsync();
+            return await _context.Rooms.Where(r => r.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task EditRoom(Room room)

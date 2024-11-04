@@ -10,6 +10,5 @@ namespace PsychoCare.Application.Services.Interfaces
         Task<Response<IEnumerable<RoomViewModel>>> GetList();
         Task<Response<RoomViewModel>> GetById(int id);
         Task<Response> EditById(int id, RegisterRoomInputModel request);
-        Task<Response> DisableById(int id);
     }
 }

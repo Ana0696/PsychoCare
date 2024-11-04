@@ -13,22 +13,22 @@ import MaskedInput from 'react-text-mask';
 interface UserFormValues extends EditUserRequest {}
 
 const userSchema = Yup.object().shape({
-  name: Yup.string().required('Required'),
-  surname: Yup.string().required('Required'),
-  birthDate: Yup.date().required('Required'),
+  name: Yup.string().required('Campo obrigatório'),
+  surname: Yup.string().required('Campo obrigatório'),
+  birthDate: Yup.date().required('Campo obrigatório'),
   phoneNumber: Yup.string()
-    .required('Required')
+    .required('Campo obrigatório')
     .test('is-valid-phone', 'Telefone incompleto', (value) => !!value && value.replace(/\D/g, '').length === 11),
-  email: Yup.string().email('Invalid email').required('Required'),
-  role: Yup.number().required('Required'),
+  email: Yup.string().email('E-mail inválido').required('Campo obrigatório'),
+  role: Yup.number().required('Campo obrigatório'),
   period: Yup.string().nullable(),
   gender: Yup.string().nullable(),
   supervisorId: Yup.number().nullable(),
   scheduleBlocks: Yup.array().of(
     Yup.object().shape({
-      startTime: Yup.string().required('Required'),
-      endTime: Yup.string().required('Required'),
-      weekDay: Yup.number().required('Required'),
+      startTime: Yup.string().required('Campo obrigatório'),
+      endTime: Yup.string().required('Campo obrigatório'),
+      weekDay: Yup.number().required('Campo obrigatório'),
       observation: Yup.string().nullable(),
     }),
   ),
@@ -36,7 +36,7 @@ const userSchema = Yup.object().shape({
 
 const EditUser: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const userId = parseInt(id ?? '', 10);
+  const userId = parseInt(id ?? '', 0);
   const [initialValues, setInitialValues] = useState<UserFormValues | null>(null);
   const [supervisor, setSupervisor] = useState<UserListResponse[]>([]);
   const navigate = useNavigate();

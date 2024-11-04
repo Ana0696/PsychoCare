@@ -6,7 +6,8 @@ import { UserListResponse } from '../../api/models/UserManagement';
 import { showAlert } from '../../components/common/Alert';
 import { getUsers } from '../../api/requests/user-management';
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import { useNavigate } from 'react-router-dom';
 import { getTranslatedUserRole } from '../../models/Enums';
 
@@ -18,7 +19,6 @@ const UserListPage: React.FC = () => {
     const fetchUsers = async () => {
       try {
         const response = await getUsers();
-        console.log(response);
         if (response.success === true) {
           setUsers(response.data!);
         } else if (response.message) {
@@ -41,13 +41,23 @@ const UserListPage: React.FC = () => {
         accessor: 'name',
       },
       {
+        Header: 'E-mail',
+        accessor: 'email',
+      },
+      {
         Header: 'Permissão',
         accessor: 'role',
         Cell: ({ row }) => <>{getTranslatedUserRole(row.values.role)}</>,
       },
       {
-        Header: 'E-mail',
-        accessor: 'email',
+        Header: 'Status',
+        accessor: 'isActive',
+        Cell: ({ row }) => (
+          <div className="flex items-center justify-center gap-1">
+            {row.values.isActive && <RadioButtonCheckedIcon className="text-green-700" titleAccess="Ativado" />}
+            {!row.values.isActive && <RadioButtonUncheckedIcon className="text-red-700" titleAccess="Desativado" />}
+          </div>
+        ),
       },
       {
         Header: 'Editar',
@@ -60,9 +70,6 @@ const UserListPage: React.FC = () => {
               aria-label="Edit"
             >
               <EditIcon />
-            </button>
-            <button className="icon-button text-red-900" aria-label="Delete">
-              <DeleteIcon />
             </button>
           </div>
         ),
@@ -78,13 +85,15 @@ const UserListPage: React.FC = () => {
           <h2 className="text-xl font-bold">Usuários do sistema</h2>
           <p className="text-gray-600">Uma lista de usuários.</p>
         </div>
-        <Button
-          variant="contained"
-          className="mt-4 lg:mt-0 bg-gradient-to-br from-slate-900 to-slate-700"
-          onClick={() => navigate(`/user-management/create`)}
-        >
-          Novo usuário
-        </Button>
+        <div>
+          <Button
+            variant="contained"
+            className="mt-4 lg:mt-0 bg-gradient-to-br from-slate-900 to-slate-700"
+            onClick={() => navigate(`/user-management/create`)}
+          >
+            Novo usuário
+          </Button>
+        </div>
       </div>
       <CustomTable columns={columns} data={users} />
     </div>

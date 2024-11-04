@@ -8,6 +8,7 @@ import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import ChairIcon from '@mui/icons-material/Chair';
 import useAuth from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { UserRole } from '../../models/Enums';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -15,7 +16,7 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
 
   return (
@@ -32,15 +33,19 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
           <div className="h-full w-full px-3 pb-4 overflow-y-auto bg-white dark:bg-slate-900 ">
             <ul className="space-y-2 font-medium">
               <SidebarItem icon={<GridViewIcon />} label="Dashboard" onClick={() => navigate('/dashboard')} />
-              <SidebarItem
-                icon={<PersonAddIcon />}
-                label="Gestão de usuários"
-                onClick={() => navigate('/user-management')}
-              />
+              {user?.role && (user.role === UserRole.manager || user.role === UserRole.secretary) && (
+                <SidebarItem
+                  icon={<PersonAddIcon />}
+                  label="Gestão de usuários"
+                  onClick={() => navigate('/user-management')}
+                />
+              )}
               <SidebarItem icon={<AssignmentTurnedInIcon />} label="Triagem" onClick={() => navigate('/screening')} />
               <SidebarItem icon={<InsertInvitationIcon />} label="Agenda" onClick={() => navigate('/agenda')} />
               <SidebarItem icon={<ContentPasteIcon />} label="Pastas" onClick={() => navigate('/folders')} />
-              <SidebarItem icon={<ChairIcon />} label="Salas" onClick={() => navigate('/room')} />
+              {user?.role && (user.role === UserRole.manager || user.role === UserRole.secretary) && (
+                <SidebarItem icon={<ChairIcon />} label="Salas" onClick={() => navigate('/room')} />
+              )}
             </ul>
           </div>
         </aside>

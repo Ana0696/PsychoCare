@@ -15,26 +15,26 @@ interface UserFormValues extends CreateUserRequest {
 }
 
 const userSchema = Yup.object().shape({
-  name: Yup.string().required('Required'),
-  surname: Yup.string().required('Required'),
-  birthDate: Yup.date().required('Required'),
+  name: Yup.string().required('Campo obrigatório'),
+  surname: Yup.string().required('Campo obrigatório'),
+  birthDate: Yup.date().required('Campo obrigatório'),
   phoneNumber: Yup.string()
-    .required('Required')
+    .required('Campo obrigatório')
     .test('is-valid-phone', 'Telefone incompleto', (value) => !!value && value.replace(/\D/g, '').length === 11),
-  email: Yup.string().email('Invalid email').required('Required'),
-  password: Yup.string().required('Required'),
+  email: Yup.string().email('E-mail inválido').required('Campo obrigatório'),
+  password: Yup.string().required('Campo obrigatório'),
   confirmPassword: Yup.string()
-    .oneOf([Yup.ref('password'), undefined], 'Passwords must match')
-    .required('Required'),
-  role: Yup.number().required('Required'),
+    .oneOf([Yup.ref('password'), undefined], 'As senhas devem ser iguais')
+    .required('Campo obrigatório'),
+  role: Yup.number().required('Campo obrigatório'),
   period: Yup.string().nullable(),
   gender: Yup.string().nullable(),
   supervisorId: Yup.number().nullable(),
   scheduleBlocks: Yup.array().of(
     Yup.object().shape({
-      startTime: Yup.string().required('Required'),
-      endTime: Yup.string().required('Required'),
-      weekDay: Yup.number().required('Required'),
+      startTime: Yup.string().required('Campo obrigatório'),
+      endTime: Yup.string().required('Campo obrigatório'),
+      weekDay: Yup.number().required('Campo obrigatório'),
       observation: Yup.string().nullable(),
     }),
   ),

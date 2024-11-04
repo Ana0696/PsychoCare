@@ -7,6 +7,7 @@ export interface UserListResponse {
   phoneNumber: string;
   email: string;
   role: UserRole;
+  isActive: boolean;
 }
 
 export interface CreateUserRequest {

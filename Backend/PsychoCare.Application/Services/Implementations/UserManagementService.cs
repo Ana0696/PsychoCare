@@ -47,7 +47,8 @@ namespace PsychoCare.Application.Services.Implementations
                     Surname = u.Surname,
                     Email = u.Email,
                     PhoneNumber = u.PhoneNumber,
-                    Role = u.Role
+                    Role = u.Role,
+                    IsActive = u.IsActive,
                 }
             ));
         }

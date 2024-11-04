@@ -14,11 +14,11 @@ const screeningSchema = Yup.object().shape({
   birthDate: Yup.date().required('Data de nascimento é obrigatória'),
   gender: Yup.string().nullable(),
   phoneNumber: Yup.string()
-    .required('Required')
+    .required('Campo obrigatório')
     .test('is-valid-phone', 'Telefone incompleto', (value) => !!value && value.replace(/\D/g, '').length === 11),
   email: Yup.string().email('Email inválido').nullable(),
-  urgency: Yup.boolean().required(),
-  specialNeeds: Yup.boolean().required(),
+  urgency: Yup.boolean().required('Campo obrigatório'),
+  specialNeeds: Yup.boolean().required('Campo obrigatório'),
   observation: Yup.string().nullable(),
 });
 
@@ -37,7 +37,6 @@ const NewScreeningModal: React.FC<{
         ...values,
         phoneNumber: values.phoneNumber.replace(/\D/g, ''),
       };
-      console.log(data);
       const response = await createScreening(data);
       if (response.success) {
         showAlert('Triagem criada com sucesso!', 'success');

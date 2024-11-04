@@ -18,7 +18,7 @@ namespace PsychoCare.Application.Services.Implementations
 
         public async Task<Response> Register(RegisterRoomInputModel request)
         {
-            Room newRoom = new Room(request.Name, request.AllowGroupSession, request.SpecialNeeds, request.Pediatric);
+            Room newRoom = new Room(request.Name, request.AllowGroupSession, request.SpecialNeeds, request.Pediatric, request.IsActive);
 
             await _roomRepository.RegisterRoom(newRoom);
             return new Response();
@@ -35,7 +35,8 @@ namespace PsychoCare.Application.Services.Implementations
                     Name = r.Name,
                     AllowGroupSession = r.AllowGroupSession,
                     SpecialNeeds = r.SpecialNeeds,
-                    Pediatric = r.Pediatric
+                    Pediatric = r.Pediatric,
+                    IsActive = r.IsActive
                 }
             ));
         }
@@ -55,7 +56,8 @@ namespace PsychoCare.Application.Services.Implementations
                 Name = room.Name,
                 AllowGroupSession = room.AllowGroupSession,
                 SpecialNeeds = room.SpecialNeeds,
-                Pediatric = room.Pediatric
+                Pediatric = room.Pediatric,
+                IsActive = room.IsActive
             };
 
             return new Response<RoomViewModel>(roomVm);
@@ -70,23 +72,7 @@ namespace PsychoCare.Application.Services.Implementations
                 return new Response(false, "Sala não encontrada.");
             }
 
-            room.EditRoom(request.Name, request.AllowGroupSession, request.SpecialNeeds, request.Pediatric);
-
-            await _roomRepository.EditRoom(room);
-
-            return new Response();
-        }
-
-        public async Task<Response> DisableById(int id)
-        {
-            var room = await _roomRepository.GetById(id);
-
-            if (room == null)
-            {
-                return new Response(false, "Sala não encontrada.");
-            }
-
-            room.DisableRoom();
+            room.EditRoom(request.Name, request.AllowGroupSession, request.SpecialNeeds, request.Pediatric, request.IsActive);
 
             await _roomRepository.EditRoom(room);
 

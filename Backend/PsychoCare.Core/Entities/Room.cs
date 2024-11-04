@@ -6,27 +6,26 @@
         public bool AllowGroupSession { get; private set; }
         public bool SpecialNeeds { get; private set; }
         public bool Pediatric { get; private set; }
-        public bool Disabled { get; private set; } = false;
+        public bool IsActive { get; private set; }
 
-        public Room(string name, bool allowGroupSession, bool specialNeeds, bool pediatric)
+        public Room() { }
+
+        public Room(string name, bool allowGroupSession, bool specialNeeds, bool pediatric, bool isActive)
         {
             Name = name;
             AllowGroupSession = allowGroupSession;
             SpecialNeeds = specialNeeds;
             Pediatric = pediatric;
+            IsActive = isActive;
         }
 
-        public void EditRoom(string name, bool allowGroupSession, bool specialNeeds, bool pediatric)
+        public void EditRoom(string name, bool allowGroupSession, bool specialNeeds, bool pediatric, bool isActive)
         {
             Name = name;
             AllowGroupSession = allowGroupSession;
             SpecialNeeds = specialNeeds;
             Pediatric = pediatric;
-        }
-
-        public void DisableRoom()
-        {
-            Disabled = true;
+            IsActive = isActive;
         }
     }
 }

@@ -9,6 +9,7 @@ namespace PsychoCare.Application.ViewModels.UserManagement
         public string Surname { get; set; }
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
+        public bool IsActive { get; set; }
         public UserRole Role { get; set; }
     }
 }

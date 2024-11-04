@@ -7,5 +7,6 @@
         public bool AllowGroupSession { get; set; }
         public bool SpecialNeeds { get; set; }
         public bool Pediatric { get; set; }
+        public bool IsActive { get; set; }
     }
 }

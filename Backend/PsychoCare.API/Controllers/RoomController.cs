@@ -67,18 +67,5 @@ namespace PsychoCare.API.Controllers
 
             return BadRequest(response);
         }
-
-        //Disable
-        [HttpDelete("{id}")]
-        [ProducesResponseType(typeof(Response), 200)]
-        [ProducesResponseType(400)]
-        public async Task<IActionResult> DisableById(int id)
-        {
-            var response = await _roomService.DisableById(id);
-            if (response?.Success == true)
-                return Ok(response);
-
-            return BadRequest(response);
-        }
     }
 }

@@ -15,6 +15,8 @@ import NewScreeningModal from '../../components/screening/NewScreeningModal';
 import ScreeningDetailsModal from '../../components/screening/ScreeningDetailsModal';
 import CancelScreeningModal from '../../components/screening/CancelScreeningModal';
 import EditScreeningModal from '../../components/screening/EditScreeningModal';
+import useAuth from '../../hooks/useAuth';
+import { UserRole } from '../../models/Enums';
 
 const ScreeningListPage: React.FC = () => {
   const [scrennings, setScrennings] = useState<ScreeningListResponse[]>([]);
@@ -23,6 +25,7 @@ const ScreeningListPage: React.FC = () => {
   const [isDetailsModalOpen, setDetailsModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [isCancelModalOpen, setCancelModalOpen] = useState(false);
+  const { user } = useAuth();
 
   const calculateAge = (birthDate: string): number => {
     const birth = new Date(birthDate);
@@ -131,12 +134,20 @@ const ScreeningListPage: React.FC = () => {
             <button onClick={() => handleDetailsOpen(value)} className="icon-button text-blue-950" aria-label="View">
               <VisibilityIcon />
             </button>
-            <button onClick={() => handleEditOpen(value)} className="icon-button text-yellow-800" aria-label="Edit">
-              <EditIcon />
-            </button>
-            <button onClick={() => handleCancelOpen(value)} className="icon-button text-red-900" aria-label="Delete">
-              <DeleteIcon />
-            </button>
+            {user?.role && (user.role === UserRole.manager || user.role === UserRole.secretary) && (
+              <>
+                <button onClick={() => handleEditOpen(value)} className="icon-button text-yellow-800" aria-label="Edit">
+                  <EditIcon />
+                </button>
+                <button
+                  onClick={() => handleCancelOpen(value)}
+                  className="icon-button text-red-900"
+                  aria-label="Delete"
+                >
+                  <DeleteIcon />
+                </button>
+              </>
+            )}
           </div>
         ),
       },
@@ -151,13 +162,17 @@ const ScreeningListPage: React.FC = () => {
           <h2 className="text-xl font-bold">Triagem</h2>
           <p className="text-gray-600">Lista de triagem, ordenada pela Urgência e pela data de contato.</p>
         </div>
-        <Button
-          variant="contained"
-          className="mt-4 lg:mt-0 bg-gradient-to-br from-slate-900 to-slate-700"
-          onClick={handleOpenModalNew}
-        >
-          Nova triagem
-        </Button>
+        <div>
+          {user?.role && (user.role === UserRole.manager || user.role === UserRole.secretary) && (
+            <Button
+              variant="contained"
+              className="mt-4 lg:mt-0 bg-gradient-to-br from-slate-900 to-slate-700"
+              onClick={handleOpenModalNew}
+            >
+              Nova triagem
+            </Button>
+          )}
+        </div>
       </div>
       <CustomTable columns={columns} data={scrennings} />
 
