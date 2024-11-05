@@ -7,7 +7,7 @@ namespace PsychoCare.Core.Entities
     {
         public string Name { get; private set; }
         public string Surname { get; private set; }
-        public DateTime BirthDate { get; private set; }
+        public DateTime? BirthDate { get; private set; }
         public string? Gender { get; private set; }
         public string PhoneNumber { get; private set; }
         public string Email { get; private set; }
@@ -20,10 +20,11 @@ namespace PsychoCare.Core.Entities
         public virtual IEnumerable<ScheduleBlock>? ScheduleBlocks { get; set; }
         public virtual User Supervisor { get; set; }
         public virtual IEnumerable<User> Interns { get; set; }
+        public virtual IEnumerable<Session> Sessions { get; set; }
 
         public User() { }
 
-        public User(string name, string surname, DateTime birthDate, string? gender, string phoneNumber, string email, string? period, string password, UserRole role, bool isActive, int? supervisorId, IEnumerable<ScheduleBlock>? scheduleBlocks)
+        public User(string name, string surname, DateTime? birthDate, string? gender, string phoneNumber, string email, string? period, string password, UserRole role, bool isActive, int? supervisorId, IEnumerable<ScheduleBlock>? scheduleBlocks)
         {
             Name = name;
             Surname = surname;
@@ -39,7 +40,7 @@ namespace PsychoCare.Core.Entities
             ScheduleBlocks = scheduleBlocks;
         }
 
-        public void EditUser(string name, string surname, DateTime birthDate, string? gender, string phoneNumber, string email, string? period, UserRole role, bool isActive, int? supervisorId, IEnumerable<ScheduleBlock>? scheduleBlocks)
+        public void EditUser(string name, string surname, DateTime? birthDate, string? gender, string phoneNumber, string email, string? period, UserRole role, bool isActive, int? supervisorId, IEnumerable<ScheduleBlock>? scheduleBlocks)
         {
             Name = name;
             Surname = surname;

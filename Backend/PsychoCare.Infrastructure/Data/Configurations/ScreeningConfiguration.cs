@@ -19,6 +19,7 @@ namespace PsychoCare.Infrastructure.Data.Configurations
             builder.Property(s => s.Observation).HasMaxLength(1023);
             builder.Property(s => s.ContactDate).IsRequired();
             builder.Property(s => s.Disabled).IsRequired();
+            builder.HasOne(s => s.Patient).WithMany(u => u.Screenings).HasForeignKey(u => u.PatientId);
         }
     }
 }

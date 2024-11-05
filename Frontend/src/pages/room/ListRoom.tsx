@@ -82,7 +82,7 @@ const RoomListPage: React.FC = () => {
   );
 
   return (
-    <div className="p-6 rounded-lg shadow-md bg-slate-200">
+    <div>
       <div className="flex flex-col lg:flex-row justify-between mb-4">
         <div className="flex flex-col gap-3">
           <h2 className="text-xl font-bold">Salas</h2>

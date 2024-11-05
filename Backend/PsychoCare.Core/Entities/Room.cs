@@ -8,6 +8,8 @@
         public bool Pediatric { get; private set; }
         public bool IsActive { get; private set; }
 
+        public virtual IEnumerable<Session> Sessions { get; set; }
+
         public Room() { }
 
         public Room(string name, bool allowGroupSession, bool specialNeeds, bool pediatric, bool isActive)

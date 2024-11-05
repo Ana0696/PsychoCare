@@ -18,7 +18,7 @@ namespace PsychoCare.Application.Services.Implementations
 
         public async Task<Response> Register(RegisterScreeningInputModel request)
         {
-            Screening newScreening = new Screening(request.Name, request.BirthDate, request.Gender, request.PhoneNumber, request.Email, request.Urgency, request.SpecialNeeds, request.Observation);
+            Screening newScreening = new Screening(request.Name, request.BirthDate, request.Gender, request.PhoneNumber, request.Email, request.Urgency, request.SpecialNeeds, request.Observation, request.PatientId);
 
             await _screeningRepository.RegisterScreening(newScreening);
             return new Response();
@@ -61,8 +61,8 @@ namespace PsychoCare.Application.Services.Implementations
                 PhoneNumber = screening.PhoneNumber,
                 Urgency = screening.Urgency,
                 SpecialNeeds = screening.SpecialNeeds,
-                Observation = screening.Observation
-
+                Observation = screening.Observation,
+                PatientId = screening.PatientId
             };
 
             return new Response<ScreeningViewModel>(screeningVm);
@@ -78,7 +78,7 @@ namespace PsychoCare.Application.Services.Implementations
             }
 
             screening.EditScreening(request.Name, request.BirthDate, request.Gender, request.PhoneNumber,
-                request.Email, request.Urgency, request.SpecialNeeds, request.Observation);
+                request.Email, request.Urgency, request.SpecialNeeds, request.Observation, request.PatientId);
 
             await _screeningRepository.EditScreening(screening);
 

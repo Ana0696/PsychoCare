@@ -12,11 +12,13 @@
         public string? Observation { get; private set; }
         public DateTime ContactDate { get; private set; } = DateTime.Now;
         public bool Disabled {  get; private set; } = false;
+        public int? PatientId { get; set; }
 
+        public virtual Patient Patient { get; set; }
 
         public Screening() { }
 
-        public Screening(string name, DateTime birthDate, string? gender, string phoneNumber, string? email, bool urgency, bool specialNeeds, string? observation)
+        public Screening(string name, DateTime birthDate, string? gender, string phoneNumber, string? email, bool urgency, bool specialNeeds, string? observation, int? patientId)
         {
             Name = name;
             BirthDate = birthDate;
@@ -26,9 +28,10 @@
             Urgency = urgency;
             SpecialNeeds = specialNeeds;
             Observation = observation;
+            PatientId = patientId;
         }
 
-        public void EditScreening(string name, DateTime birthDate, string? gender, string phoneNumber, string? email, bool urgency, bool specialNeeds, string? observation)
+        public void EditScreening(string name, DateTime birthDate, string? gender, string phoneNumber, string? email, bool urgency, bool specialNeeds, string? observation, int? patientId)
         {
             Name = name;
             BirthDate = birthDate;
@@ -38,6 +41,7 @@
             Urgency = urgency;
             SpecialNeeds = specialNeeds;
             Observation = observation;
+            PatientId = patientId;
         }
 
         public void DisableScreening()

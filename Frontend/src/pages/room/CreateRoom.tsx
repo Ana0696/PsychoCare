@@ -44,7 +44,7 @@ const RegisterRoom: React.FC = () => {
   return (
     <Formik initialValues={initialValues} validationSchema={roomSchema} onSubmit={handleSubmit}>
       {({ values, handleChange, errors, touched }) => (
-        <Form className="p-8 bg-white rounded-lg shadow-md w-full max-w-4xl mx-auto">
+        <Form className="p-8 bg-white rounded-lg shadow-md w-full max-w-xl mx-auto">
           <h2 className="text-2xl font-bold mb-6 text-center">Nova Sala</h2>
 
           <div className="grid grid-cols-1 gap-6">
