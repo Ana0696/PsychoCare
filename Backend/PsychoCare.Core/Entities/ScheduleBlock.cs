@@ -6,7 +6,7 @@
         public TimeSpan EndTime { get; private set; }
         public DayOfWeek WeekDay { get; private set; }
         public int UserId { get; private set; }
-        public string Observation { get; private set; }
+        public string? Observation { get; private set; }
 
         public virtual User User { get; set; }
 

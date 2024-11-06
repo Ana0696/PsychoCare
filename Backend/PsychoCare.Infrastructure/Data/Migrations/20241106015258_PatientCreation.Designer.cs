@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PsychoCare.Infrastructure.Data.Context;
 
@@ -11,9 +12,11 @@ using PsychoCare.Infrastructure.Data.Context;
 namespace PsychoCare.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(PsychoCareDBContext))]
-    partial class PsychoCareDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241106015258_PatientCreation")]
+    partial class PatientCreation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

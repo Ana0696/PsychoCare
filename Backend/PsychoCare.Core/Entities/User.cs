@@ -1,5 +1,4 @@
 ﻿using PsychoCare.Core.Entities.Enums;
-using System.Reflection;
 
 namespace PsychoCare.Core.Entities
 {

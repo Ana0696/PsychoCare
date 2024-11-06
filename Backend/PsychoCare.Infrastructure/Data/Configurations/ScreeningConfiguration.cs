@@ -13,7 +13,7 @@ namespace PsychoCare.Infrastructure.Data.Configurations
             builder.Property(s => s.BirthDate).IsRequired();
             builder.Property(s => s.Gender).HasMaxLength(31);
             builder.Property(s => s.PhoneNumber).IsRequired().HasMaxLength(15);
-            builder.Property(s=> s.Email).HasMaxLength(127);
+            builder.Property(s => s.Email).HasMaxLength(127);
             builder.Property(s => s.Urgency).IsRequired();
             builder.Property(s => s.SpecialNeeds).IsRequired();
             builder.Property(s => s.Observation).HasMaxLength(1023);

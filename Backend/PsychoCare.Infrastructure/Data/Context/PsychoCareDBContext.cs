@@ -11,6 +11,10 @@ namespace PsychoCare.Infrastructure.Data.Context
         public DbSet<ScheduleBlock> ScheduleBlocks { get; set; }
         public DbSet<Screening> Screenings { get; set; }
         public DbSet<Room> Rooms { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+        public DbSet<Patient> Patients { get; set; }
+        public DbSet<PatientFile> PatientFiles { get; set; }
+        public DbSet<Session> Sessions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
