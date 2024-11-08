@@ -24,6 +24,7 @@ namespace PsychoCare.Core.Entities
         public virtual IEnumerable<Screening> Screenings { get; set; }
         public virtual IEnumerable<Session> Sessions { get; set; }
         public virtual IEnumerable<PatientFile> Files { get; set; }
+        public virtual IEnumerable<Appointment> Appointments { get; set; }
 
         public Patient(string name, PatientGroup group, DateTime birthDate, 
             string phoneNumber, bool specialNeeds, string email, string document, 

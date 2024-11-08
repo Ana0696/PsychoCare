@@ -15,6 +15,7 @@ namespace PsychoCare.Infrastructure.Data.Configurations
             builder.HasOne(s => s.Patient).WithMany(p => p.Sessions).HasForeignKey(u => u.PatientId).IsRequired();
             builder.HasOne(s => s.User).WithMany(u => u.Sessions).HasForeignKey(u => u.UserId).IsRequired();
             builder.HasOne(s => s.Room).WithMany(r => r.Sessions).HasForeignKey(u => u.RoomId).IsRequired();
+            builder.HasOne(s => s.Appointment).WithOne(a => a.Session).HasForeignKey<Session>(a => a.AppointmentId).IsRequired();
         }
     }
 }

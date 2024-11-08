@@ -20,6 +20,7 @@ namespace PsychoCare.Core.Entities
         public virtual User Supervisor { get; set; }
         public virtual IEnumerable<User> Interns { get; set; }
         public virtual IEnumerable<Session> Sessions { get; set; }
+        public virtual IEnumerable<Appointment> Appointments { get; set; }
 
         public User() { }
 

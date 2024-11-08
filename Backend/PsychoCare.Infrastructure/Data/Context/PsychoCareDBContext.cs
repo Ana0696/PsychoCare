@@ -15,6 +15,7 @@ namespace PsychoCare.Infrastructure.Data.Context
         public DbSet<Patient> Patients { get; set; }
         public DbSet<PatientFile> PatientFiles { get; set; }
         public DbSet<Session> Sessions { get; set; }
+        public DbSet<Appointment> Appointments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

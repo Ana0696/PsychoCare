@@ -9,6 +9,7 @@
         public bool IsActive { get; private set; }
 
         public virtual IEnumerable<Session> Sessions { get; set; }
+        public virtual IEnumerable<Appointment> Appointments { get; set; }
 
         public Room() { }
 
