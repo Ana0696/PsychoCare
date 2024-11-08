@@ -14,7 +14,7 @@ namespace PsychoCare.Application.Services.Interfaces
         Task<Response> EditById(int id, PatientInputModel request);
         Task<Response> EditSessionById(int sessionId, SessionInputModel request, int? userId);
         Task<Response> UploadFile(int patientId, IFormFile file);
-        Task<byte[]> DownloadFile(int fileId, int? userId);
+        Task<FileViewModel> DownloadFile(int fileId, int? userId);
         Task<Response> DeleteFile(int fileId, int? userId);
     }
 }

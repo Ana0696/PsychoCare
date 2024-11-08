@@ -88,10 +88,6 @@ const Login: React.FC = () => {
                   Lembre-se de mim
                 </label>
               </div>
-
-              <div className="text-sm">
-                <button className="font-medium text-cyan-700 hover:text-slate-800">Esqueceu sua senha?</button>
-              </div>
             </div>
 
             <div>

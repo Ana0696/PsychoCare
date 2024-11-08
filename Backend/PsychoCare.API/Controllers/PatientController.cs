@@ -137,7 +137,7 @@ namespace PsychoCare.API.Controllers
                 return NotFound("Arquivo não encontrado.");
             }
 
-            return File(response, "application/octet-stream");
+            return File(response.File, "application/octet-stream", response.FileName);
         }
 
         [Authorize(Roles = "secretary,manager,intern")]

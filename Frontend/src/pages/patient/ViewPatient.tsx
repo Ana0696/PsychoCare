@@ -5,6 +5,8 @@ import { PatientResponse } from '../../api/models/Patient';
 import { getPatient } from '../../api/requests/Patient';
 import { useParams } from 'react-router-dom';
 import PatientEditForm from '../../components/patient/PatientEditForm';
+import SessionList from '../../components/patient/SessionList';
+import FileListTab from '../../components/patient/FileList';
 
 const ViewPatient: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -45,16 +47,16 @@ const ViewPatient: React.FC = () => {
   if (!patientData) return <div>Carregando...</div>;
 
   return (
-    <Box className="p-8 bg-white rounded-lg shadow-md w-full max-w-4xl mx-auto">
+    <Box className="p-2 bg-white rounded-lg shadow-md w-full max-w-4xl mx-auto">
       <Tabs value={tabIndex} onChange={handleChange} centered>
         <Tab label="Cadastro" />
-        <Tab label="Sessão" />
+        <Tab label="Sessões" />
         <Tab label="Arquivos" />
       </Tabs>
       <Box mt={4}>
         {tabIndex === 0 && <PatientEditForm id={patientId} patient={patientData} onEditSuccess={reloadData} />}
-        {tabIndex === 1 && <div>A fazer</div>}
-        {tabIndex === 2 && <div>A fazer</div>}
+        {tabIndex === 1 && <SessionList sessions={patientData.sessions} onUpdateSession={reloadData} />}
+        {tabIndex === 2 && <FileListTab files={patientData.files} patientId={patientId} onUpdateFile={reloadData} />}
       </Box>
     </Box>
   );

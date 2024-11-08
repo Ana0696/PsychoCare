@@ -99,3 +99,31 @@ export const del = async <T>(url: string): Promise<ApiResponse<T>> => {
     throw new Error('Erro ao conectar com o servidor.');
   }
 };
+
+export const getFile = async <T>(url: string, config?: any): Promise<T> => {
+  try {
+    const response: AxiosResponse<T> = await api.get(url, config);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.message || 'Erro ao conectar com o servidor.');
+    }
+    throw new Error('Erro ao conectar com o servidor.');
+  }
+};
+
+export const postFile = async <T = void, R = any>(url: string, data: R): Promise<ApiResponse<T>> => {
+  try {
+    const response: AxiosResponse<ApiResponse<T>> = await api.post(url, data, {
+      headers: {
+        'Content-Type': data instanceof FormData ? 'multipart/form-data' : 'application/json',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      return error.response.data;
+    }
+    throw new Error('Erro ao conectar com o servidor.');
+  }
+};

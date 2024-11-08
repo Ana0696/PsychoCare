@@ -63,3 +63,8 @@ export interface PatientFileResponse {
   name: string;
   date: string;
 }
+
+export interface EditSessionRequest {
+  evolution: string;
+  observation?: string;
+}

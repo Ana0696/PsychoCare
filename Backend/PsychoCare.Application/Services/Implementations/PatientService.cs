@@ -92,7 +92,7 @@ namespace PsychoCare.Application.Services.Implementations
                 GuardianPhoneNumber = patient.GuardianPhoneNumber,
                 Observations = patient.Observations,
                 Profession = patient.Profession,
-                Files = patient.Files.Select(f =>
+                Files = patient.Files.OrderBy(x => x.Date).Select(f =>
                     new PatientFileViewModel()
                     {
                         Id = f.Id,
@@ -100,7 +100,7 @@ namespace PsychoCare.Application.Services.Implementations
                         Date = f.Date
                     }
                 ),
-                Sessions = patient.Sessions.Select(s =>
+                Sessions = patient.Sessions.OrderByDescending(x => x.Date).Select(s =>
                     new SessionViewModel()
                     {
                         Id = s.Id,
@@ -174,7 +174,7 @@ namespace PsychoCare.Application.Services.Implementations
             return new Response();
         }
 
-        public async Task<byte[]> DownloadFile(int fileId, int? userId)
+        public async Task<FileViewModel> DownloadFile(int fileId, int? userId)
         {
             var file = await _patientRepository.GetPatientFileById(fileId, userId);
 
@@ -187,8 +187,11 @@ namespace PsychoCare.Application.Services.Implementations
             {
                 return null;
             }
-
-            return File.ReadAllBytes(file.Path);
+            return new FileViewModel()
+            {
+                File = File.ReadAllBytes(file.Path),
+                FileName = file.Name
+            };
         }
 
         public async Task<Response> DeleteFile(int fileId, int? userId)

@@ -17,6 +17,7 @@ import CancelScreeningModal from '../../components/screening/CancelScreeningModa
 import EditScreeningModal from '../../components/screening/EditScreeningModal';
 import useAuth from '../../hooks/useAuth';
 import { UserRole } from '../../models/Enums';
+import dayjs from 'dayjs';
 
 const ScreeningListPage: React.FC = () => {
   const [scrennings, setScrennings] = useState<ScreeningListResponse[]>([]);
@@ -28,25 +29,7 @@ const ScreeningListPage: React.FC = () => {
   const { user } = useAuth();
 
   const calculateAge = (birthDate: string): number => {
-    const birth = new Date(birthDate);
-    const today = new Date();
-    let age = today.getFullYear() - birth.getFullYear();
-    const monthDiff = today.getMonth() - birth.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-      age--;
-    }
-    return age;
-  };
-
-  const formatDate = (dateString: string): string => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
+    return dayjs().diff(dayjs(birthDate), 'year');
   };
 
   const handleOpenModalNew = () => setModalNewIsOpen(true);
@@ -124,7 +107,7 @@ const ScreeningListPage: React.FC = () => {
       {
         Header: 'Data de Contato',
         accessor: 'contactDate',
-        Cell: ({ value }: { value: string }) => <>{formatDate(value)}</>,
+        Cell: ({ value }: { value: string }) => <>{dayjs(value).format('DD/MM/YYYY HH:mm')}</>,
       },
       {
         Header: 'Ações',
