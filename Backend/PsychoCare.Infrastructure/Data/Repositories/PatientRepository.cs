@@ -16,7 +16,7 @@ namespace PsychoCare.Infrastructure.Data.Repositories
 
         public async Task<IEnumerable<Patient>> GetList(int? userId)
         {
-            return await _context.Patients.Where(p => userId == null ? true : p.Sessions.Any(s => s.UserId == userId)).ToListAsync();
+            return await _context.Patients.Where(p => userId == null ? true : p.Sessions.Any(s => s.UserId == userId)).OrderBy(p => p.Name).ToListAsync();
         }
 
         public async Task<int> RegisterPatient(Patient newPatient)

@@ -4,9 +4,10 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { showAlert } from '../../components/common/Alert';
 import { CreateScreeningRequest } from '../../api/models/Screening';
-import { Patient } from '../../api/models/Patient';
+import { PatientListResponse } from '../../api/models/Patient';
 import MaskedInput from 'react-text-mask';
 import { createScreening } from '../../api/requests/screening';
+import { getPatientsScreening } from '../../api/requests/Patient';
 
 const screeningSchema = Yup.object().shape({
   patientId: Yup.number().nullable(),
@@ -27,8 +28,8 @@ const NewScreeningModal: React.FC<{
   onClose: () => void;
   onSubmitSuccess: () => void;
 }> = ({ open, onClose, onSubmitSuccess }) => {
-  const [patients, setPatients] = useState<Patient[]>([]);
-  const [filteredPatients, setFilteredPatients] = useState<Patient[]>([]);
+  const [patients, setPatients] = useState<PatientListResponse[]>([]);
+  const [filteredPatients, setFilteredPatients] = useState<PatientListResponse[]>([]);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const handleSubmit = async (values: CreateScreeningRequest) => {
@@ -52,73 +53,16 @@ const NewScreeningModal: React.FC<{
 
   useEffect(() => {
     const fetchPatients = async () => {
-      /*try {
-        const response = await getPatients();
+      try {
+        const response = await getPatientsScreening();
         if (response.success) {
-          setPatients(response.data);
+          setPatients(response.data!);
         } else {
           showAlert(response.message, 'error');
         }
       } catch (error) {
         showAlert('Erro ao carregar pacientes.', 'error');
-      }*/
-      // Mock patients
-      setPatients([
-        {
-          id: 1,
-          name: 'João Silva',
-          birthDate: '1990-01-01',
-          phoneNumber: '11999999999',
-          specialNeeds: false,
-          email: 'joao@email.com',
-          gender: 'Masculino',
-        },
-        {
-          id: 2,
-          name: 'Maria Oliveira',
-          birthDate: '1985-05-15',
-          phoneNumber: '21988888888',
-          specialNeeds: true,
-          email: 'maria@email.com',
-          gender: 'Feminino',
-        },
-        {
-          id: 3,
-          name: 'Carlos Souza',
-          birthDate: '1978-12-22',
-          phoneNumber: '31977777777',
-          specialNeeds: false,
-          email: 'carlos@email.com',
-          gender: 'Masculino',
-        },
-        {
-          id: 4,
-          name: 'Ana Pereira',
-          birthDate: '1995-07-30',
-          phoneNumber: '41966666666',
-          specialNeeds: true,
-          email: 'ana@email.com',
-          gender: 'Feminino',
-        },
-        {
-          id: 5,
-          name: 'Pedro Santos',
-          birthDate: '2000-03-10',
-          phoneNumber: '51955555555',
-          specialNeeds: false,
-          email: 'pedro@email.com',
-          gender: 'Masculino',
-        },
-        {
-          id: 6,
-          name: 'Lucia Fernandes',
-          birthDate: '1982-11-05',
-          phoneNumber: '61944444444',
-          specialNeeds: true,
-          email: 'lucia@email.com',
-          gender: 'Feminino',
-        },
-      ]);
+      }
     };
 
     fetchPatients();
@@ -137,7 +81,7 @@ const NewScreeningModal: React.FC<{
     setFieldValue('specialNeeds', false);
   };
 
-  const handlePatientSelect = (patient: Patient, setFieldValue: any) => {
+  const handlePatientSelect = (patient: PatientListResponse, setFieldValue: any) => {
     // Preenche os campos com os dados do paciente selecionado
     setFieldValue('patientId', patient.id);
     setFieldValue('name', patient.name);
@@ -232,7 +176,7 @@ const NewScreeningModal: React.FC<{
                   <MenuItem value="Gênero Fluido">Gênero Fluido</MenuItem>
                   <MenuItem value="Não Binário">Não Binário</MenuItem>
                   <MenuItem value="Transgênero">Transgênero</MenuItem>
-                  <MenuItem value="Agênero">Outro</MenuItem>
+                  <MenuItem value="Outro">Outro</MenuItem>
                 </TextField>
 
                 <MaskedInput

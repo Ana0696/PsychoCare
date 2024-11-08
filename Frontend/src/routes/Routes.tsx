@@ -14,6 +14,9 @@ import ListScreening from '../pages/screening/ListScreening';
 import ListRoom from '../pages/room/ListRoom';
 import CreateRoom from '../pages/room/CreateRoom';
 import EditRoom from '../pages/room/EditRoom';
+import ListPatient from '../pages/patient/ListPatient';
+import CreatePatient from '../pages/patient/CreatePatient';
+import ViewPatient from '../pages/patient/ViewPatient';
 
 const AppRoutes: React.FC = () => {
   const { isAuthenticated, loading } = useAuth();
@@ -44,6 +47,9 @@ const AppRoutes: React.FC = () => {
         </Route>
         <Route element={<ProtectedRoute allowedRoles={[UserRole.secretary, UserRole.manager, UserRole.intern]} />}>
           <Route path="/screening" element={<ListScreening />} />
+          <Route path="/patient" element={<ListPatient />} />
+          <Route path="/patient/create" element={<CreatePatient />} />
+          <Route path="/patient/:id" element={<ViewPatient />} />
         </Route>
       </Route>
 

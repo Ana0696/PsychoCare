@@ -39,3 +39,21 @@ export const DayOfWeekNames: Record<DayOfWeek, string> = {
 export function getTranslatedDayOfWeek(day: DayOfWeek): string {
   return DayOfWeekNames[day] || 'Desconhecido';
 }
+
+export enum PatientGroup {
+  Adult = 1,
+  Child,
+  Teenager,
+  Elderly,
+}
+
+export const PatientGroupNames: Record<PatientGroup, string> = {
+  [PatientGroup.Adult]: 'Adulto',
+  [PatientGroup.Child]: 'Criança',
+  [PatientGroup.Teenager]: 'Adolescente',
+  [PatientGroup.Elderly]: 'Idoso',
+};
+
+export function getTranslatedPatientGroup(patient: PatientGroup): string {
+  return PatientGroupNames[patient] || 'Desconhecido';
+}

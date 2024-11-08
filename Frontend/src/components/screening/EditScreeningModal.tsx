@@ -4,9 +4,10 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { showAlert } from '../../components/common/Alert';
 import { getScreening, putScreening } from '../../api/requests/screening';
-import { Patient } from '../../api/models/Patient';
+import { PatientListResponse } from '../../api/models/Patient';
 import MaskedInput from 'react-text-mask';
 import { EditScreeningRequest } from '../../api/models/Screening';
+import { getPatientsScreening } from '../../api/requests/Patient';
 
 const screeningSchema = Yup.object().shape({
   patientId: Yup.number().nullable(),
@@ -28,8 +29,8 @@ const EditScreeningModal: React.FC<{
   onSubmitSuccess: () => void;
   screeningId: number;
 }> = ({ open, onClose, onSubmitSuccess, screeningId }) => {
-  const [patients, setPatients] = useState<Patient[]>([]);
-  const [filteredPatients, setFilteredPatients] = useState<Patient[]>([]);
+  const [patients, setPatients] = useState<PatientListResponse[]>([]);
+  const [filteredPatients, setFilteredPatients] = useState<PatientListResponse[]>([]);
   const [initialValues, setInitialValues] = useState<EditScreeningRequest | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -52,72 +53,16 @@ const EditScreeningModal: React.FC<{
     };
 
     const fetchPatients = async () => {
-      /* try {
-        const response = await getPatients();
+      try {
+        const response = await getPatientsScreening();
         if (response.success) {
-          setPatients(response.data);
+          setPatients(response.data!);
         } else {
           showAlert(response.message, 'error');
         }
       } catch (error) {
         showAlert('Erro ao carregar pacientes.', 'error');
-      }*/
-      setPatients([
-        {
-          id: 1,
-          name: 'João Silva',
-          birthDate: '1990-01-01',
-          phoneNumber: '11999999999',
-          specialNeeds: false,
-          email: 'joao@email.com',
-          gender: 'Masculino',
-        },
-        {
-          id: 2,
-          name: 'Maria Oliveira',
-          birthDate: '1985-05-15',
-          phoneNumber: '21988888888',
-          specialNeeds: true,
-          email: 'maria@email.com',
-          gender: 'Feminino',
-        },
-        {
-          id: 3,
-          name: 'Carlos Souza',
-          birthDate: '1978-12-22',
-          phoneNumber: '31977777777',
-          specialNeeds: false,
-          email: 'carlos@email.com',
-          gender: 'Masculino',
-        },
-        {
-          id: 4,
-          name: 'Ana Pereira',
-          birthDate: '1995-07-30',
-          phoneNumber: '41966666666',
-          specialNeeds: true,
-          email: 'ana@email.com',
-          gender: 'Feminino',
-        },
-        {
-          id: 5,
-          name: 'Pedro Santos',
-          birthDate: '2000-03-10',
-          phoneNumber: '51955555555',
-          specialNeeds: false,
-          email: 'pedro@email.com',
-          gender: 'Masculino',
-        },
-        {
-          id: 6,
-          name: 'Lucia Fernandes',
-          birthDate: '1982-11-05',
-          phoneNumber: '61944444444',
-          specialNeeds: true,
-          email: 'lucia@email.com',
-          gender: 'Feminino',
-        },
-      ]);
+      }
     };
 
     if (open) {
@@ -139,7 +84,7 @@ const EditScreeningModal: React.FC<{
     setFieldValue('specialNeeds', false);
   };
 
-  const handlePatientSelect = (patient: Patient, setFieldValue: any) => {
+  const handlePatientSelect = (patient: PatientListResponse, setFieldValue: any) => {
     setFieldValue('patientId', patient.id);
     setFieldValue('name', patient.name);
     setFieldValue('birthDate', patient.birthDate);

@@ -239,7 +239,7 @@ const CreateUser: React.FC = () => {
               <MenuItem value="Gênero Fluido">Gênero Fluido</MenuItem>
               <MenuItem value="Não Binário">Não Binário</MenuItem>
               <MenuItem value="Transgênero">Transgênero</MenuItem>
-              <MenuItem value="Agênero">Outro</MenuItem>
+              <MenuItem value="Outro">Outro</MenuItem>
             </TextField>
             {values.role === UserRole.intern && (
               <TextField
