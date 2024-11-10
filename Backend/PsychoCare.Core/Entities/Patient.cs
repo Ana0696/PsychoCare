@@ -49,6 +49,15 @@ namespace PsychoCare.Core.Entities
             GuardianGender = guardianGender;
         }
 
+        public Patient(string name, PatientGroup group, DateTime birthDate, string phoneNumber, bool specialNeeds)
+        {
+            Name = name;
+            Group = group;
+            BirthDate = birthDate;
+            PhoneNumber = phoneNumber;
+            SpecialNeeds = specialNeeds;
+        }
+
         public void EditPatient(string name, PatientGroup group, DateTime birthDate,
             string phoneNumber, bool specialNeeds, string email, string document,
             string gender, string observations, string profession, string guardianName,

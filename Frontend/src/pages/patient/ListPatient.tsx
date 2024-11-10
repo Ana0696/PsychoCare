@@ -34,10 +34,10 @@ const PatientListPage: React.FC = () => {
         } else if (response.message) {
           showAlert(response.message, 'error');
         } else {
-          showAlert('Falha ao carregar a lista. Por favor, verifique suas credenciais.', 'error');
+          showAlert('Falha ao carregar a lista.', 'error');
         }
       } catch (error) {
-        showAlert('Falha ao carregar a lista. Por favor, verifique suas credenciais.', 'error');
+        showAlert('Falha ao carregar a lista.', 'error');
       }
     };
 

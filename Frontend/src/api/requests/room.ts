@@ -1,9 +1,13 @@
 import { get, post, put } from '../api';
 import { ApiResponse } from '../models/ApiResponse';
-import { CreateRoomRequest, RoomResponse } from '../models/Room';
+import { CreateRoomRequest, RoomAppointmentResponse, RoomResponse } from '../models/Room';
 
 export const getRooms = async (): Promise<ApiResponse<RoomResponse[]>> => {
   return await get<RoomResponse[]>('/Room/list');
+};
+
+export const getAppointmentRooms = async (): Promise<ApiResponse<RoomAppointmentResponse[]>> => {
+  return await get<RoomAppointmentResponse[]>('/Room/list');
 };
 
 export const registerRoom = async (data: CreateRoomRequest): Promise<ApiResponse> => {

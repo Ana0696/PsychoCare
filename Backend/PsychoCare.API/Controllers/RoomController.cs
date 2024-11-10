@@ -8,7 +8,6 @@ using PsychoCare.Application.ViewModels.Room;
 namespace PsychoCare.API.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(Roles = "secretary,manager")]
     [ApiController]
     public class RoomController : ControllerBase
     {
@@ -20,6 +19,7 @@ namespace PsychoCare.API.Controllers
         }
 
         [HttpPost("register")]
+        [Authorize(Roles = "secretary,manager")]
         [ProducesResponseType(typeof(Response), 200)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> Register(RegisterRoomInputModel request)
@@ -32,6 +32,7 @@ namespace PsychoCare.API.Controllers
         }
 
         [HttpGet("list")]
+        [Authorize(Roles = "secretary,manager,intern")]
         [ProducesResponseType(typeof(Response<IEnumerable<RoomViewModel>>), 200)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetList()
@@ -44,6 +45,7 @@ namespace PsychoCare.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "secretary,manager")]
         [ProducesResponseType(typeof(Response<RoomViewModel>), 200)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetById(int id)
@@ -57,6 +59,7 @@ namespace PsychoCare.API.Controllers
 
         //Edit
         [HttpPut("{id}")]
+        [Authorize(Roles = "secretary,manager")]
         [ProducesResponseType(typeof(Response), 200)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> EditById(int id, RegisterRoomInputModel request)

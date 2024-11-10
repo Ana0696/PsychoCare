@@ -17,6 +17,7 @@ import EditRoom from '../pages/room/EditRoom';
 import ListPatient from '../pages/patient/ListPatient';
 import CreatePatient from '../pages/patient/CreatePatient';
 import ViewPatient from '../pages/patient/ViewPatient';
+import Calendar from '../pages/appointment/Calendar';
 
 const AppRoutes: React.FC = () => {
   const { isAuthenticated, loading } = useAuth();
@@ -50,6 +51,7 @@ const AppRoutes: React.FC = () => {
           <Route path="/patient" element={<ListPatient />} />
           <Route path="/patient/create" element={<CreatePatient />} />
           <Route path="/patient/:id" element={<ViewPatient />} />
+          <Route path="/appointments" element={<Calendar />} />
         </Route>
       </Route>
 

@@ -41,7 +41,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
                 />
               )}
               <SidebarItem icon={<AssignmentTurnedInIcon />} label="Triagem" onClick={() => navigate('/screening')} />
-              <SidebarItem icon={<InsertInvitationIcon />} label="Agenda" onClick={() => navigate('/agenda')} />
+              <SidebarItem icon={<InsertInvitationIcon />} label="Agenda" onClick={() => navigate('/appointments')} />
               <SidebarItem icon={<ContentPasteIcon />} label="Pastas" onClick={() => navigate('/patient')} />
               {user?.role && (user.role === UserRole.manager || user.role === UserRole.secretary) && (
                 <SidebarItem icon={<ChairIcon />} label="Salas" onClick={() => navigate('/room')} />

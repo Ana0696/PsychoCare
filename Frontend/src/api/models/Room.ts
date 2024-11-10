@@ -7,6 +7,12 @@ export interface RoomResponse {
   isActive: boolean;
 }
 
+export interface RoomAppointmentResponse {
+  id: number;
+  name: string;
+  isActive?: boolean;
+}
+
 export interface CreateRoomRequest {
   name: string;
   allowGroupSession: boolean;
