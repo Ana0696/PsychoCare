@@ -65,9 +65,102 @@ namespace PsychoCare.Application.Services.Implementations
                     StartDate = a.StartDate,
                     EndDate = a.EndDate,
                     SpecialNeeds = userId == null || userId == a.UserId ? a.SpecialNeeds : null,
-                    Urgency = userId == null || userId == a.UserId ? a.Urgency : null
+                    Urgency = userId == null || userId == a.UserId ? a.Urgency : null,
+                    Status = userId == null || userId == a.UserId ? a.Status : null,
                 }
             ));
+        }
+
+        public async Task<Response> DisableById(int id)
+        {
+            var appointment = await _appointmentRepository.GetById(id);
+
+            if (appointment == null)
+            {
+                return new Response(false, "Agendamento não encontrado.");
+            }
+
+            appointment.DisableAppointment();
+
+            await _appointmentRepository.EditAppointment(appointment);
+
+            return new Response();
+        }
+
+        public async Task<Response> EditDateById(int id, EditDateAppointmentInputModel request)
+        {
+            var appointment = await _appointmentRepository.GetById(id);
+
+            if (appointment == null)
+            {
+                return new Response(false, "Agendamento não encontrado.");
+            }
+
+            appointment.EditDate(request.StartDate, request.EndDate);
+
+            await _appointmentRepository.EditAppointment(appointment);
+
+            return new Response();
+        }
+
+        public async Task<Response> EditStatusById(int id, EditStatusAppointmentInputModel request)
+        {
+            var appointment = await _appointmentRepository.GetById(id);
+
+            if (appointment == null)
+            {
+                return new Response(false, "Agendamento não encontrado.");
+            }
+
+            appointment.EditStatus(request.Status);
+
+            await _appointmentRepository.EditAppointment(appointment);
+
+            return new Response();
+        }
+
+        public async Task<Response<SessionViewModel>> GetSessionByAppointmentId(int id)
+        {
+            var session = await _appointmentRepository.GetSessionByAppointmentId(id);
+
+            if (session == null)
+            {
+                return new Response<SessionViewModel>(false, "Sessão não existe.");
+            }
+
+            return new Response<SessionViewModel>(new SessionViewModel()
+            {
+                Id = session.Id,
+                Evolution = session.Evolution,
+                Observation = session.Observation
+            });
+        }
+
+        public async Task<Response> RegisterSessionByAppointmentId(int id, RegisterSessionInputModel request)
+        {
+            var session = await _appointmentRepository.GetSessionByAppointmentId(id);
+
+            if (session == null)
+            {
+                var appointment = await _appointmentRepository.GetById(id);
+
+                if (appointment == null)
+                {
+                    return new Response(false, "Agendamento não encontrado.");
+                }
+
+                session = new Session(appointment.PatientId, appointment.UserId, appointment.RoomId, request.Evolution, request.Observation);
+                await _appointmentRepository.RegisterSession(session);
+
+                return new Response();
+            }
+            else
+            {
+                session.EditSession(request.Evolution, request.Observation);
+                await _appointmentRepository.EditSession(session);
+
+                return new Response();
+            }
         }
     }
 }

@@ -8,5 +8,10 @@ namespace PsychoCare.Application.Services.Interfaces
     {
         Task<Response> Register(int userId, RegisterAppointmentInputModel request);
         Task<Response<IEnumerable<AppointmentViewModel>>> GetList(int? userId);
+        Task<Response> DisableById(int id);
+        Task<Response> EditDateById(int id, EditDateAppointmentInputModel request);
+        Task<Response> EditStatusById(int id, EditStatusAppointmentInputModel request);
+        Task<Response<SessionViewModel>> GetSessionByAppointmentId(int id);
+        Task<Response> RegisterSessionByAppointmentId(int id, RegisterSessionInputModel request);
     }
 }

@@ -17,7 +17,7 @@
 
         public Session() { }
 
-        public Session(int patientId, int userId, int roomId, string evolution, string observation)
+        public Session(int patientId, int userId, int roomId, string? evolution, string? observation)
         {
             PatientId = patientId;
             UserId = userId;
@@ -26,7 +26,7 @@
             Observation = observation;
         }
 
-        public void EditSession(string evolution, string observation)
+        public void EditSession(string evolution, string? observation)
         {
             Evolution = evolution;
             Observation = observation;

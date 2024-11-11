@@ -1,4 +1,6 @@
-﻿namespace PsychoCare.Application.ViewModels.Appointment
+﻿using PsychoCare.Core.Entities.Enums;
+
+namespace PsychoCare.Application.ViewModels.Appointment
 {
     public class AppointmentViewModel
     {
@@ -13,5 +15,6 @@
         public DateTime EndDate { get; set; }
         public bool? SpecialNeeds { get; set; }
         public bool? Urgency { get; set; }
+        public AppointmentStatus? Status { get; set; }
     }
 }

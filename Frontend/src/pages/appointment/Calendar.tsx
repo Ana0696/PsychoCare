@@ -15,6 +15,7 @@ import {
   FormControl,
   Button,
   SelectChangeEvent,
+  Link,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
@@ -22,9 +23,9 @@ import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import CancelIcon from '@mui/icons-material/Cancel';
 import ReplayIcon from '@mui/icons-material/Replay';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import ReceiptIcon from '@mui/icons-material/Receipt';
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
 
@@ -33,6 +34,7 @@ import { RoomAppointmentResponse } from '../../api/models/Room';
 import { getAppointments } from '../../api/requests/appointment';
 import { getAppointmentRooms } from '../../api/requests/room';
 import { showAlert } from '../../components/common/Alert';
+import { useNavigate } from 'react-router-dom';
 
 const CalendarPage: React.FC = () => {
   const [appointments, setAppointments] = useState<AppointmentResponse[]>([]);
@@ -42,6 +44,7 @@ const CalendarPage: React.FC = () => {
   const [rooms, setRooms] = useState<RoomAppointmentResponse[]>([]);
   const [status, setStatus] = useState<string>('Paciente presente');
   const [isMobileView, setIsMobileView] = useState<boolean>(window.innerWidth <= 768);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -173,19 +176,23 @@ const CalendarPage: React.FC = () => {
           >
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
               <Typography variant="h6" fontWeight="bold">
-                {modalData.id ? modalData.patientName : 'Ocupado'}
+                {modalData.id ? (
+                  <Link
+                    onClick={() => navigate(`/patient/${modalData.patientId}`)}
+                    underline="hover"
+                    color="primary"
+                    fontWeight="bold"
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {modalData.patientName}
+                  </Link>
+                ) : (
+                  <Typography variant="h6" fontWeight="bold">
+                    Ocupado
+                  </Typography>
+                )}
               </Typography>
               <Box display="flex" gap={1}>
-                {modalData.id && (
-                  <>
-                    <IconButton size="small">
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton size="small" color="error">
-                      <DeleteIcon />
-                    </IconButton>
-                  </>
-                )}
                 <IconButton size="small" onClick={closeModal}>
                   <CloseIcon />
                 </IconButton>
@@ -226,10 +233,20 @@ const CalendarPage: React.FC = () => {
                     </MenuItem>
                   </Select>
                 </FormControl>
-                <Box mt={2} display="flex" gap={1}>
-                  <Button variant="outlined" startIcon={<ReceiptIcon />} size="small">
-                    Relatório
+                <Box mt={2} display="flex" gap={1} justifyContent="space-between">
+                  <Button variant="outlined" startIcon={<NoteAddIcon />} size="small">
+                    Acompanhamento
                   </Button>
+                  {modalData.id && (
+                    <div>
+                      <button className="icon-button text-yellow-800" aria-label="Edit">
+                        <EditIcon />
+                      </button>
+                      <IconButton size="small" color="error">
+                        <HighlightOffIcon />
+                      </IconButton>
+                    </div>
+                  )}
                 </Box>
               </>
             )}

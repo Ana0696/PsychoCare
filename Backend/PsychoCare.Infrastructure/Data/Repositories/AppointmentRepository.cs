@@ -54,5 +54,34 @@ namespace PsychoCare.Infrastructure.Data.Repositories
         {
             return await _context.Appointments.Include(a => a.Patient).Include(a => a.Room).Include(a => a.User).Where(s => s.Disabled == false).OrderByDescending(s => s.StartDate).ToListAsync();
         }
+
+        public async Task<Appointment?> GetById(int id)
+        {
+            return await _context.Appointments.Where(a => a.Id == id && a.Disabled == false).FirstOrDefaultAsync();
+        }
+
+        public async Task EditAppointment(Appointment appointment)
+        {
+            _context.Appointments.Update(appointment);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<Session?> GetSessionByAppointmentId(int id)
+        {
+            return await _context.Sessions.Where(a => a.AppointmentId == id).FirstOrDefaultAsync();
+        }
+
+        public async Task<int> RegisterSession(Session newSession)
+        {
+            await _context.Sessions.AddAsync(newSession);
+            await _context.SaveChangesAsync();
+            return newSession.Id;
+        }
+
+        public async Task EditSession(Session session)
+        {
+            _context.Sessions.Update(session);
+            await _context.SaveChangesAsync();
+        }
     }
 }

@@ -49,5 +49,74 @@ namespace PsychoCare.API.Controllers
 
             return BadRequest(response);
         }
+
+        //Disable
+        [Authorize(Roles = "secretary,manager,intern")]
+        [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(Response), 200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> DisableById(int id)
+        {
+            var response = await _appointmentService.DisableById(id);
+            if (response?.Success == true)
+                return Ok(response);
+
+            return BadRequest(response);
+        }
+
+        //Edit
+        [Authorize(Roles = "secretary,manager,intern")]
+        [HttpPut("{id}")]
+        [ProducesResponseType(typeof(Response), 200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> EditDateById(int id, [FromBody] EditDateAppointmentInputModel request)
+        {
+            var response = await _appointmentService.EditDateById(id, request);
+            if (response?.Success == true)
+                return Ok(response);
+
+            return BadRequest(response);
+        }
+
+        //Edit
+        [Authorize(Roles = "secretary,manager")]
+        [HttpPut("{id}/status")]
+        [ProducesResponseType(typeof(Response), 200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> EditStatusById(int id, [FromBody] EditStatusAppointmentInputModel request)
+        {
+            var response = await _appointmentService.EditStatusById(id, request);
+            if (response?.Success == true)
+                return Ok(response);
+
+            return BadRequest(response);
+        }
+
+        [Authorize(Roles = "manager,intern")]
+        [HttpGet("{id}/session")]
+        [ProducesResponseType(typeof(Response<IEnumerable<SessionViewModel>>), 200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> GetSessionByAppointmentId(int id)
+        {
+            var response = await _appointmentService.GetSessionByAppointmentId(id);
+            if (response?.Success == true)
+                return Ok(response);
+
+            return BadRequest(response);
+        }
+
+        //Edit
+        [Authorize(Roles = "manager,intern")]
+        [HttpPost("{id}/session")]
+        [ProducesResponseType(typeof(Response), 200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> RegisterSession(int id, [FromBody] RegisterSessionInputModel request)
+        {
+            var response = await _appointmentService.RegisterSessionByAppointmentId(id, request);
+            if (response?.Success == true)
+                return Ok(response);
+
+            return BadRequest(response);
+        }
     }
 }
