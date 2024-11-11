@@ -20,7 +20,7 @@ namespace PsychoCare.Application.ViewModels.Patient
         public string GuardianPhoneNumber { get; set; }
         public string GuardianDocument { get; set; }
         public string GuardianGender { get; set; }
-        public IEnumerable<SessionViewModel> Sessions { get; set; }
+        public IEnumerable<SessionListViewModel> Sessions { get; set; }
         public IEnumerable<PatientFileViewModel> Files { get; set; }
     }
 }

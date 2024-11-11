@@ -1,6 +1,6 @@
 ﻿namespace PsychoCare.Application.ViewModels.Patient
 {
-    public class SessionViewModel
+    public class SessionListViewModel
     {
         public int Id { get; set; }
         public string ProfessionalName { get; set; }

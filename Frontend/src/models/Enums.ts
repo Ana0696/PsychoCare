@@ -57,3 +57,25 @@ export const PatientGroupNames: Record<PatientGroup, string> = {
 export function getTranslatedPatientGroup(patient: PatientGroup): string {
   return PatientGroupNames[patient] || 'Desconhecido';
 }
+
+export enum AppointmentStatus {
+  Waiting = 0,
+  Confirmed,
+  BothAttended,
+  PatientOnlyAttended,
+  ProfessionalOnlyAttended,
+  NoneAttended,
+}
+
+export const AppointmentStatusNames: Record<AppointmentStatus, string> = {
+  [AppointmentStatus.Waiting]: 'Aguardando',
+  [AppointmentStatus.Confirmed]: 'Confirmado',
+  [AppointmentStatus.BothAttended]: 'Ambos compareceram',
+  [AppointmentStatus.PatientOnlyAttended]: 'Apenas o paciente compareceu',
+  [AppointmentStatus.ProfessionalOnlyAttended]: 'Apenas o profissional compareceu',
+  [AppointmentStatus.NoneAttended]: 'Ninguém compareceu',
+};
+
+export function getTranslatedAppointmentStatus(appointment: AppointmentStatus): string {
+  return AppointmentStatusNames[appointment] || 'Desconhecido';
+}

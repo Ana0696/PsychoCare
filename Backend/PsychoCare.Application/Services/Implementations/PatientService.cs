@@ -101,7 +101,7 @@ namespace PsychoCare.Application.Services.Implementations
                     }
                 ),
                 Sessions = patient.Sessions.OrderByDescending(x => x.Date).Select(s =>
-                    new SessionViewModel()
+                    new SessionListViewModel()
                     {
                         Id = s.Id,
                         Date = s.Date,

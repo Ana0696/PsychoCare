@@ -18,11 +18,11 @@ import {
   Link,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import ThumbDownIcon from '@mui/icons-material/ThumbDown';
-import CancelIcon from '@mui/icons-material/Cancel';
-import ReplayIcon from '@mui/icons-material/Replay';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
+import PersonIcon from '@mui/icons-material/Person';
+import WorkIcon from '@mui/icons-material/Work';
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
+import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import EditIcon from '@mui/icons-material/Edit';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
@@ -31,16 +31,30 @@ import 'dayjs/locale/pt-br';
 
 import { AppointmentResponse } from '../../api/models/Appointment';
 import { RoomAppointmentResponse } from '../../api/models/Room';
-import { getAppointments } from '../../api/requests/appointment';
+import { editAppointmentStatus, getAppointments } from '../../api/requests/appointment';
 import { getAppointmentRooms } from '../../api/requests/room';
 import { showAlert } from '../../components/common/Alert';
 import { useNavigate } from 'react-router-dom';
+import CancelAppointmentModal from '../../components/appointment/CancelAppointmentModal';
+import EditAppointmentModal from '../../components/appointment/EditAppointmentModal';
+import { AppointmentStatus, AppointmentStatusNames } from '../../models/Enums';
+
+const AppointmentStatusIcons: Record<AppointmentStatus, JSX.Element> = {
+  [AppointmentStatus.Waiting]: <HourglassEmptyIcon fontSize="small" />,
+  [AppointmentStatus.Confirmed]: <DoneOutlineIcon fontSize="small" />,
+  [AppointmentStatus.BothAttended]: <DoneAllIcon fontSize="small" />,
+  [AppointmentStatus.PatientOnlyAttended]: <PersonIcon fontSize="small" />,
+  [AppointmentStatus.ProfessionalOnlyAttended]: <WorkIcon fontSize="small" />,
+  [AppointmentStatus.NoneAttended]: <HighlightOffIcon fontSize="small" />,
+};
 
 const CalendarPage: React.FC = () => {
   const [appointments, setAppointments] = useState<AppointmentResponse[]>([]);
   const [filteredAppointments, setFilteredAppointments] = useState<AppointmentResponse[]>([]);
   const [selectedRoom, setSelectedRoom] = useState<string>('');
   const [modalData, setModalData] = useState<AppointmentResponse | null>(null);
+  const [cancelModalOpen, setCancelModalOpen] = useState<boolean>(false);
+  const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
   const [rooms, setRooms] = useState<RoomAppointmentResponse[]>([]);
   const [status, setStatus] = useState<string>('Paciente presente');
   const [isMobileView, setIsMobileView] = useState<boolean>(window.innerWidth <= 768);
@@ -104,6 +118,46 @@ const CalendarPage: React.FC = () => {
 
   const closeModal = () => {
     setModalData(null);
+  };
+
+  const handleCancelAppointment = () => {
+    setCancelModalOpen(true);
+  };
+
+  const refreshAppointments = async () => {
+    closeModal();
+    const response = await getAppointments();
+    if (response.success) {
+      setAppointments(response.data!);
+      setFilteredAppointments(response.data!);
+    } else {
+      showAlert('Erro ao recarregar agendamentos.', 'error');
+    }
+  };
+
+  const openEditModal = () => {
+    setEditModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setEditModalOpen(false);
+  };
+
+  const handleStatusChange = async (status: AppointmentStatus) => {
+    if (!modalData?.id) return;
+
+    try {
+      const response = await editAppointmentStatus(modalData.id, { status });
+      if (response.success) {
+        showAlert('Status atualizado com sucesso!', 'success');
+        setModalData({ ...modalData, status: status });
+        refreshAppointments();
+      } else {
+        showAlert(response.message || 'Erro ao atualizar status.', 'error');
+      }
+    } catch (error) {
+      showAlert('Erro ao atualizar status.', 'error');
+    }
   };
 
   return (
@@ -212,25 +266,19 @@ const CalendarPage: React.FC = () => {
                   {modalData.specialNeeds && <Chip label="Necessidades Especiais" color="info" size="small" />}
                 </Box>
                 <FormControl size="small" className="mt-3 w-full">
-                  <Select value={status} onChange={(e) => setStatus(e.target.value as string)} displayEmpty>
-                    <MenuItem value="Paciente presente">
-                      <ThumbUpIcon color="success" fontSize="small" /> Paciente presente
-                    </MenuItem>
-                    <MenuItem value="Paciente ausente">
-                      <ThumbDownIcon color="warning" fontSize="small" /> Paciente ausente
-                    </MenuItem>
-                    <MenuItem value="Paciente cancelou">
-                      <CancelIcon color="error" fontSize="small" /> Paciente cancelou
-                    </MenuItem>
-                    <MenuItem value="Profissional cancelou">
-                      <CancelIcon color="error" fontSize="small" /> Profissional cancelou
-                    </MenuItem>
-                    <MenuItem value="Confirmar agendamento">
-                      <CheckCircleIcon color="primary" fontSize="small" /> Confirmar agendamento
-                    </MenuItem>
-                    <MenuItem value="Desfazer">
-                      <ReplayIcon fontSize="small" /> Desfazer
-                    </MenuItem>
+                  <Select
+                    value={modalData.status ?? AppointmentStatus.Waiting}
+                    onChange={(e) => handleStatusChange(Number(e.target.value) as AppointmentStatus)}
+                    displayEmpty
+                  >
+                    {Object.entries(AppointmentStatusNames).map(([status, label]) => (
+                      <MenuItem key={status} value={status}>
+                        <Box display="flex" alignItems="center" gap={1}>
+                          {AppointmentStatusIcons[Number(status) as AppointmentStatus]}
+                          {label}
+                        </Box>
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
                 <Box mt={2} display="flex" gap={1} justifyContent="space-between">
@@ -239,12 +287,16 @@ const CalendarPage: React.FC = () => {
                   </Button>
                   {modalData.id && (
                     <div>
-                      <button className="icon-button text-yellow-800" aria-label="Edit">
+                      <button className="icon-button text-yellow-800" onClick={openEditModal} aria-label="Editar">
                         <EditIcon />
                       </button>
-                      <IconButton size="small" color="error">
+                      <button
+                        className="icon-button text-red-900"
+                        onClick={handleCancelAppointment}
+                        aria-label="Cancelar"
+                      >
                         <HighlightOffIcon />
-                      </IconButton>
+                      </button>
                     </div>
                   )}
                 </Box>
@@ -252,6 +304,26 @@ const CalendarPage: React.FC = () => {
             )}
           </Box>
         </Modal>
+      )}
+
+      {modalData?.id && (
+        <CancelAppointmentModal
+          open={cancelModalOpen}
+          onClose={() => setCancelModalOpen(false)}
+          appointmentId={modalData.id}
+          onSubmitSuccess={refreshAppointments}
+        />
+      )}
+
+      {modalData?.id && (
+        <EditAppointmentModal
+          open={editModalOpen}
+          onClose={closeEditModal}
+          onSubmitSuccess={refreshAppointments}
+          appointmentId={modalData.id}
+          initialStartDate={modalData.startDate}
+          initialEndDate={modalData.endDate}
+        />
       )}
     </div>
   );
