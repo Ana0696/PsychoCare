@@ -17,13 +17,14 @@
 
         public Session() { }
 
-        public Session(int patientId, int userId, int roomId, string? evolution, string? observation)
+        public Session(int patientId, int userId, int roomId, string? evolution, string? observation, int appointmentId)
         {
             PatientId = patientId;
             UserId = userId;
             RoomId = roomId;
             Evolution = evolution;
             Observation = observation;
+            AppointmentId = appointmentId;
         }
 
         public void EditSession(string evolution, string? observation)

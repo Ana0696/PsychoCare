@@ -33,16 +33,35 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
           <div className="h-full w-full px-3 pb-4 overflow-y-auto bg-white dark:bg-slate-900 ">
             <ul className="space-y-2 font-medium">
               <SidebarItem icon={<GridViewIcon />} label="Dashboard" onClick={() => navigate('/dashboard')} />
-              {user?.role && (user.role === UserRole.manager || user.role === UserRole.secretary) && (
-                <SidebarItem
-                  icon={<PersonAddIcon />}
-                  label="Gestão de usuários"
-                  onClick={() => navigate('/user-management')}
-                />
-              )}
-              <SidebarItem icon={<AssignmentTurnedInIcon />} label="Triagem" onClick={() => navigate('/screening')} />
-              <SidebarItem icon={<InsertInvitationIcon />} label="Agenda" onClick={() => navigate('/appointments')} />
-              <SidebarItem icon={<ContentPasteIcon />} label="Pastas" onClick={() => navigate('/patient')} />
+              {user?.role &&
+                (user.role === UserRole.manager ||
+                  user.role === UserRole.secretary ||
+                  user.role === UserRole.supervisor) && (
+                  <SidebarItem
+                    icon={<PersonAddIcon />}
+                    label="Gestão de usuários"
+                    onClick={() => navigate('/user-management')}
+                  />
+                )}
+              {user?.role &&
+                (user.role === UserRole.manager ||
+                  user.role === UserRole.secretary ||
+                  user.role === UserRole.intern) && (
+                  <>
+                    <SidebarItem
+                      icon={<AssignmentTurnedInIcon />}
+                      label="Triagem"
+                      onClick={() => navigate('/screening')}
+                    />
+                    <SidebarItem
+                      icon={<InsertInvitationIcon />}
+                      label="Agenda"
+                      onClick={() => navigate('/appointments')}
+                    />
+                    <SidebarItem icon={<ContentPasteIcon />} label="Pastas" onClick={() => navigate('/patient')} />
+                  </>
+                )}
+
               {user?.role && (user.role === UserRole.manager || user.role === UserRole.secretary) && (
                 <SidebarItem icon={<ChairIcon />} label="Salas" onClick={() => navigate('/room')} />
               )}

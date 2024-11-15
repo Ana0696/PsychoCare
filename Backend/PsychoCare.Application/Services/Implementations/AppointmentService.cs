@@ -149,7 +149,7 @@ namespace PsychoCare.Application.Services.Implementations
                     return new Response(false, "Agendamento não encontrado.");
                 }
 
-                session = new Session(appointment.PatientId, appointment.UserId, appointment.RoomId, request.Evolution, request.Observation);
+                session = new Session(appointment.PatientId, appointment.UserId, appointment.RoomId, request.Evolution, request.Observation, appointment.Id);
                 await _appointmentRepository.RegisterSession(session);
 
                 return new Response();

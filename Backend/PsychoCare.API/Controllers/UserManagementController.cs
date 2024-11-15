@@ -8,7 +8,7 @@ using PsychoCare.Application.ViewModels.UserManagement;
 namespace PsychoCare.API.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(Roles = "secretary,manager")]
+    [Authorize(Roles = "secretary,manager,supervisor")]
     [ApiController]
     public class UserManagementController : ControllerBase
     {
