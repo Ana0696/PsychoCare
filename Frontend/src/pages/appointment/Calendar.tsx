@@ -37,7 +37,10 @@ import { showAlert } from '../../components/common/Alert';
 import { useNavigate } from 'react-router-dom';
 import CancelAppointmentModal from '../../components/appointment/CancelAppointmentModal';
 import EditAppointmentModal from '../../components/appointment/EditAppointmentModal';
-import { AppointmentStatus, AppointmentStatusNames } from '../../models/Enums';
+import { AppointmentStatus, AppointmentStatusNames, UserRole } from '../../models/Enums';
+import NewSessionModal from '../../components/appointment/NewSessionModal';
+import useAuth from '../../hooks/useAuth';
+import NewAppointmentModal from '../../components/appointment/NewAppointmentModal';
 
 const AppointmentStatusIcons: Record<AppointmentStatus, JSX.Element> = {
   [AppointmentStatus.Waiting]: <HourglassEmptyIcon fontSize="small" />,
@@ -55,10 +58,12 @@ const CalendarPage: React.FC = () => {
   const [modalData, setModalData] = useState<AppointmentResponse | null>(null);
   const [cancelModalOpen, setCancelModalOpen] = useState<boolean>(false);
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
+  const [sessionModalOpen, setSessionModalOpen] = useState<boolean>(false);
+  const [appointmentModalOpen, setAppointmentModalOpen] = useState<boolean>(false);
   const [rooms, setRooms] = useState<RoomAppointmentResponse[]>([]);
-  const [status, setStatus] = useState<string>('Paciente presente');
   const [isMobileView, setIsMobileView] = useState<boolean>(window.innerWidth <= 768);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -160,6 +165,10 @@ const CalendarPage: React.FC = () => {
     }
   };
 
+  const openSessionModal = () => {
+    setSessionModalOpen(true);
+  };
+
   return (
     <div className="p-4 bg-gray-100 min-h-screen">
       <Box display="flex" justifyContent="space-between" alignItems="center" className="flex-col md:flex-row mb-4">
@@ -170,16 +179,26 @@ const CalendarPage: React.FC = () => {
         >
           Agendamentos
         </Typography>
-        <FormControl variant="outlined" className="w-60">
-          <Select value={selectedRoom} onChange={handleRoomFilter} displayEmpty size="small">
-            <MenuItem value="">Todas as salas</MenuItem>
-            {rooms.map((room) => (
-              <MenuItem key={room.id} value={room.id.toString()}>
-                {room.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+
+        <div className="flex gap-3 flex-col md:flex-row mb-4">
+          <Button
+            variant="contained"
+            className="mt-4 lg:mt-0 bg-gradient-to-br from-slate-900 to-slate-700"
+            onClick={() => setAppointmentModalOpen(true)}
+          >
+            Agendar
+          </Button>
+          <FormControl variant="outlined" className="w-60">
+            <Select value={selectedRoom} onChange={handleRoomFilter} displayEmpty size="small">
+              <MenuItem value="">Todas as salas</MenuItem>
+              {rooms.map((room) => (
+                <MenuItem key={room.id} value={room.id.toString()}>
+                  {room.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </div>
       </Box>
 
       <FullCalendar
@@ -265,39 +284,57 @@ const CalendarPage: React.FC = () => {
                   {modalData.urgency && <Chip label="Urgência" color="error" size="small" />}
                   {modalData.specialNeeds && <Chip label="Necessidades Especiais" color="info" size="small" />}
                 </Box>
-                <FormControl size="small" className="mt-3 w-full">
-                  <Select
-                    value={modalData.status ?? AppointmentStatus.Waiting}
-                    onChange={(e) => handleStatusChange(Number(e.target.value) as AppointmentStatus)}
-                    displayEmpty
-                  >
-                    {Object.entries(AppointmentStatusNames).map(([status, label]) => (
-                      <MenuItem key={status} value={status}>
-                        <Box display="flex" alignItems="center" gap={1}>
-                          {AppointmentStatusIcons[Number(status) as AppointmentStatus]}
-                          {label}
-                        </Box>
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                <Box mt={2} display="flex" gap={1} justifyContent="space-between">
-                  <Button variant="outlined" startIcon={<NoteAddIcon />} size="small">
-                    Acompanhamento
-                  </Button>
+                {user?.role && (user.role === UserRole.manager || user.role === UserRole.secretary) && (
+                  <FormControl size="small" className="mt-3 w-full">
+                    <Select
+                      value={modalData.status ?? AppointmentStatus.Waiting}
+                      onChange={(e) => handleStatusChange(Number(e.target.value) as AppointmentStatus)}
+                      displayEmpty
+                    >
+                      {Object.entries(AppointmentStatusNames).map(([status, label]) => (
+                        <MenuItem key={status} value={status}>
+                          <Box display="flex" alignItems="center" gap={1}>
+                            {AppointmentStatusIcons[Number(status) as AppointmentStatus]}
+                            {label}
+                          </Box>
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )}
+                <Box mt={2} display="flex" gap={1} justifyContent="space-between" flexDirection={'row'}>
                   {modalData.id && (
-                    <div>
-                      <button className="icon-button text-yellow-800" onClick={openEditModal} aria-label="Editar">
-                        <EditIcon />
-                      </button>
-                      <button
-                        className="icon-button text-red-900"
-                        onClick={handleCancelAppointment}
-                        aria-label="Cancelar"
-                      >
-                        <HighlightOffIcon />
-                      </button>
-                    </div>
+                    <>
+                      <div>
+                        {user?.role && (user.role === UserRole.manager || user.role === UserRole.intern) && (
+                          <Button
+                            variant="outlined"
+                            startIcon={<NoteAddIcon />}
+                            size="small"
+                            onClick={openSessionModal}
+                          >
+                            Acompanhamento
+                          </Button>
+                        )}
+                      </div>
+                      <div>
+                        {(modalData.status === AppointmentStatus.Waiting ||
+                          modalData.status === AppointmentStatus.Confirmed) && (
+                          <>
+                            <button className="icon-button text-yellow-800" onClick={openEditModal} aria-label="Editar">
+                              <EditIcon />
+                            </button>
+                            <button
+                              className="icon-button text-red-900"
+                              onClick={handleCancelAppointment}
+                              aria-label="Cancelar"
+                            >
+                              <HighlightOffIcon />
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </>
                   )}
                 </Box>
               </>
@@ -325,6 +362,20 @@ const CalendarPage: React.FC = () => {
           initialEndDate={modalData.endDate}
         />
       )}
+
+      {modalData?.id && (
+        <NewSessionModal
+          open={sessionModalOpen}
+          onClose={() => setSessionModalOpen(false)}
+          appointmentId={modalData?.id!}
+        />
+      )}
+
+      <NewAppointmentModal
+        open={appointmentModalOpen}
+        onClose={() => setAppointmentModalOpen(false)}
+        onSubmitSuccess={refreshAppointments}
+      />
     </div>
   );
 };

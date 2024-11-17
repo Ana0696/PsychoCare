@@ -1,4 +1,4 @@
-import { AppointmentStatus } from '../../models/Enums';
+import { AppointmentStatus, PatientGroup } from '../../models/Enums';
 
 export interface AppointmentResponse {
   id?: number;
@@ -22,4 +22,23 @@ export interface EditAppointmentRequest {
 
 export interface EditAppointmentStatusRequest {
   status: AppointmentStatus;
+}
+
+export interface CreateSessionRequest {
+  evolution: string;
+  observation?: string;
+}
+
+export interface CreateAppointmentRequest {
+  patientId?: number;
+  roomId: number;
+  startDate: string;
+  endDate: string;
+  specialNeeds: boolean;
+  urgency: boolean;
+  patientName?: string;
+  patientGroup?: PatientGroup;
+  patientBirthDate?: string;
+  patientPhoneNumber?: string;
+  screeningId?: number;
 }

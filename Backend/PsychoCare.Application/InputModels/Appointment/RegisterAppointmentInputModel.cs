@@ -14,5 +14,6 @@ namespace PsychoCare.Application.InputModels.Appointment
         public PatientGroup? PatientGroup { get; set; }
         public DateTime? PatientBirthDate { get; set; }
         public string? PatientPhoneNumber { get; set; }
+        public int? ScreeningId { get; set; }
     }
 }

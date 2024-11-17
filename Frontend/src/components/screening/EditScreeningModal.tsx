@@ -87,7 +87,7 @@ const EditScreeningModal: React.FC<{
   const handlePatientSelect = (patient: PatientListResponse, setFieldValue: any) => {
     setFieldValue('patientId', patient.id);
     setFieldValue('name', patient.name);
-    setFieldValue('birthDate', patient.birthDate);
+    setFieldValue('birthDate', patient.birthDate.split('T')[0]);
     setFieldValue('gender', patient.gender || '');
     setFieldValue('phoneNumber', patient.phoneNumber);
     setFieldValue('email', patient.email || '');

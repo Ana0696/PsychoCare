@@ -18,6 +18,7 @@ import ListPatient from '../pages/patient/ListPatient';
 import CreatePatient from '../pages/patient/CreatePatient';
 import ViewPatient from '../pages/patient/ViewPatient';
 import Calendar from '../pages/appointment/Calendar';
+import Report from '../pages/report/Report';
 
 const AppRoutes: React.FC = () => {
   const { isAuthenticated, loading } = useAuth();
@@ -54,6 +55,9 @@ const AppRoutes: React.FC = () => {
           <Route path="/patient/create" element={<CreatePatient />} />
           <Route path="/patient/:id" element={<ViewPatient />} />
           <Route path="/appointments" element={<Calendar />} />
+        </Route>
+        <Route element={<ProtectedRoute allowedRoles={[UserRole.supervisor, UserRole.manager]} />}>
+          <Route path="/report" element={<Report />} />
         </Route>
       </Route>
 

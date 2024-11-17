@@ -69,7 +69,7 @@ const EditUser: React.FC = () => {
         const response = await getUsers();
 
         if (response.success === true) {
-          setSupervisor(response.data?.filter((o) => o.role === UserRole.supervisor)!);
+          setSupervisor(response.data?.filter((o) => o.role === UserRole.supervisor || o.role === UserRole.manager)!);
         } else if (response.message) {
           showAlert(response.message, 'error');
         } else {

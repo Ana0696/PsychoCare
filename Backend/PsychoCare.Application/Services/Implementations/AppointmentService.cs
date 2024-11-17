@@ -10,11 +10,13 @@ namespace PsychoCare.Application.Services.Implementations
 {
     public class AppointmentService : IAppointmentService
     {
+        private readonly IScreeningService _screeningService;
         private readonly IAppointmentRepository _appointmentRepository;
-        public readonly IPatientRepository _patientRepository;
+        private readonly IPatientRepository _patientRepository;
 
-        public AppointmentService(IAppointmentRepository appointmentRepository, IPatientRepository patientRepository)
+        public AppointmentService(IScreeningService screeningService, IAppointmentRepository appointmentRepository, IPatientRepository patientRepository)
         {
+            _screeningService = screeningService;
             _appointmentRepository = appointmentRepository;
             _patientRepository = patientRepository;
         }
@@ -44,6 +46,11 @@ namespace PsychoCare.Application.Services.Implementations
             Appointment newAppointment = new Appointment(patientId, userId, request.RoomId,
                 request.StartDate, request.EndDate, request.Urgency, request.SpecialNeeds);
             await _appointmentRepository.RegisterAppointment(newAppointment);
+
+            if(request.ScreeningId != null)
+            {
+                await _screeningService.DisableById(request.ScreeningId ?? 0);
+            }
 
             return new Response();
         }

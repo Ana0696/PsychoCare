@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PsychoCare.Core.Entities;
+using PsychoCare.Core.Entities.Enums;
 using PsychoCare.Core.Interfaces;
 using PsychoCare.Infrastructure.Data.Context;
+using System.Collections;
 
 namespace PsychoCare.Infrastructure.Data.Repositories
 {
@@ -52,6 +54,13 @@ namespace PsychoCare.Infrastructure.Data.Repositories
         {
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<User>> GetReport(bool activeOnly, bool underMySupervision, int userId)
+        {
+            return await _context.Users.Include(u => u.Supervisor).Include(u => u.Appointments)
+                .Where(u => u.Role == UserRole.intern && (activeOnly ? u.IsActive : true) && (underMySupervision ? u.SupervisorId == userId : true)) 
+                .OrderBy(u => u.Name).ToListAsync();
         }
     }
 }

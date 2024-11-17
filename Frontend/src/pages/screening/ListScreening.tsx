@@ -3,14 +3,15 @@ import { Column } from 'react-table';
 import { Button } from '@mui/material';
 import CustomTable from '../../components/common/CustomTable';
 import { showAlert } from '../../components/common/Alert';
-import { ScreeningListResponse } from '../../api/models/Screening';
-import { getScreenins } from '../../api/requests/screening';
+import { GetScreeningResponse, ScreeningListResponse } from '../../api/models/Screening';
+import { getScreening, getScreenins } from '../../api/requests/screening';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import AccessibleIcon from '@mui/icons-material/Accessible';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import NewScreeningModal from '../../components/screening/NewScreeningModal';
 import ScreeningDetailsModal from '../../components/screening/ScreeningDetailsModal';
 import CancelScreeningModal from '../../components/screening/CancelScreeningModal';
@@ -18,6 +19,7 @@ import EditScreeningModal from '../../components/screening/EditScreeningModal';
 import useAuth from '../../hooks/useAuth';
 import { UserRole } from '../../models/Enums';
 import dayjs from 'dayjs';
+import NewAppointmentModal from '../../components/appointment/NewAppointmentModal';
 
 const ScreeningListPage: React.FC = () => {
   const [scrennings, setScrennings] = useState<ScreeningListResponse[]>([]);
@@ -26,6 +28,8 @@ const ScreeningListPage: React.FC = () => {
   const [isDetailsModalOpen, setDetailsModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [isCancelModalOpen, setCancelModalOpen] = useState(false);
+  const [appointmentModalOpen, setAppointmentModalOpen] = useState(false);
+  const [screeningData, setScreeningData] = useState<GetScreeningResponse | null>(null);
   const { user } = useAuth();
 
   const calculateAge = (birthDate: string): number => {
@@ -53,7 +57,26 @@ const ScreeningListPage: React.FC = () => {
   };
   const handleCancelClose = () => setCancelModalOpen(false);
 
-  const fetchUsers = async () => {
+  const handleAppointmentOpen = async (screeningId: number) => {
+    try {
+      const response = await getScreening(screeningId);
+      if (response.success) {
+        setScreeningData(response.data!);
+        setAppointmentModalOpen(true);
+      } else {
+        showAlert(response.message || 'Erro ao carregar triagem.', 'error');
+      }
+    } catch (error) {
+      showAlert('Erro ao carregar triagem.', 'error');
+    }
+  };
+
+  const closeAppointmentModal = () => {
+    setAppointmentModalOpen(false);
+    setScreeningData(null);
+  };
+
+  const fetchScreenins = async () => {
     try {
       const response = await getScreenins();
       if (response.success === true) {
@@ -69,7 +92,7 @@ const ScreeningListPage: React.FC = () => {
   };
 
   React.useEffect(() => {
-    fetchUsers();
+    fetchScreenins();
   }, []);
 
   const columns: Column<ScreeningListResponse>[] = React.useMemo(
@@ -113,10 +136,19 @@ const ScreeningListPage: React.FC = () => {
         Header: 'Ações',
         accessor: 'id',
         Cell: ({ value }: { value: number }) => (
-          <div className="flex items-center justify-center gap-1">
+          <div className="flex items-center justify-center gap-2">
             <button onClick={() => handleDetailsOpen(value)} className="icon-button text-blue-950" aria-label="View">
               <VisibilityIcon />
             </button>
+            {user?.role && (user.role === UserRole.manager || user.role === UserRole.intern) && (
+              <button
+                onClick={() => handleAppointmentOpen(value)}
+                className="icon-button text-green-700"
+                aria-label="Schedule"
+              >
+                <CalendarTodayIcon />
+              </button>
+            )}
             {user?.role && (user.role === UserRole.manager || user.role === UserRole.secretary) && (
               <>
                 <button onClick={() => handleEditOpen(value)} className="icon-button text-yellow-800" aria-label="Edit">
@@ -159,7 +191,7 @@ const ScreeningListPage: React.FC = () => {
       </div>
       <CustomTable columns={columns} data={scrennings} />
 
-      <NewScreeningModal open={modalNewIsOpen} onClose={handleCloseModalNew} onSubmitSuccess={fetchUsers} />
+      <NewScreeningModal open={modalNewIsOpen} onClose={handleCloseModalNew} onSubmitSuccess={fetchScreenins} />
       <ScreeningDetailsModal
         open={isDetailsModalOpen}
         onClose={handleDetailsClose}
@@ -168,14 +200,20 @@ const ScreeningListPage: React.FC = () => {
       <EditScreeningModal
         open={isEditModalOpen}
         onClose={handleEditClose}
-        onSubmitSuccess={fetchUsers}
+        onSubmitSuccess={fetchScreenins}
         screeningId={selectedScreeningId ?? 0}
       />
       <CancelScreeningModal
         open={isCancelModalOpen}
         onClose={handleCancelClose}
-        onSubmitSuccess={fetchUsers}
+        onSubmitSuccess={fetchScreenins}
         screeningId={selectedScreeningId ?? 0}
+      />
+      <NewAppointmentModal
+        open={appointmentModalOpen}
+        onClose={() => closeAppointmentModal()}
+        onSubmitSuccess={fetchScreenins}
+        screeningData={screeningData}
       />
     </div>
   );

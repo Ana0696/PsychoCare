@@ -6,6 +6,7 @@ import InsertInvitationIcon from '@mui/icons-material/InsertInvitation';
 import ContentPasteIcon from '@mui/icons-material/ContentPaste';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import ChairIcon from '@mui/icons-material/Chair';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 import useAuth from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { UserRole } from '../../models/Enums';
@@ -64,6 +65,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
 
               {user?.role && (user.role === UserRole.manager || user.role === UserRole.secretary) && (
                 <SidebarItem icon={<ChairIcon />} label="Salas" onClick={() => navigate('/room')} />
+              )}
+
+              {user?.role && (user.role === UserRole.manager || user.role === UserRole.supervisor) && (
+                <SidebarItem icon={<AssessmentIcon />} label="Relatório" onClick={() => navigate('/report')} />
               )}
             </ul>
           </div>
