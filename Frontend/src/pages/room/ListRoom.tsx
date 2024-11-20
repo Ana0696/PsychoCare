@@ -86,7 +86,6 @@ const RoomListPage: React.FC = () => {
       <div className="flex flex-col lg:flex-row justify-between mb-4">
         <div className="flex flex-col gap-3">
           <h2 className="text-xl font-bold">Salas</h2>
-          <p className="text-gray-600">Salas de atendimento.</p>
         </div>
         <div>
           <Button

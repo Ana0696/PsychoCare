@@ -102,7 +102,6 @@ const PatientListPage: React.FC = () => {
       <div className="flex flex-col lg:flex-row justify-between mb-4">
         <div className="flex flex-col gap-3">
           <h2 className="text-xl font-bold">Pacientes</h2>
-          <p className="text-gray-600">Listagem de Pacientes.</p>
         </div>
         <div>
           <Button

@@ -6,6 +6,7 @@ import useAuth from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { login as loginApi } from '../../api/requests/auth';
 import { showAlert } from '../../components/common/Alert';
+import { UserRole } from '../../models/Enums';
 
 interface LoginValues extends LoginRequest {
   rememberMe: boolean;
@@ -26,7 +27,11 @@ const Login: React.FC = () => {
       const response = await loginApi(values);
       if (response.success === true) {
         login(response.data!, values.rememberMe);
-        navigate('/dashboard');
+        if (response.data?.role !== UserRole.supervisor) {
+          navigate('/screening');
+        } else {
+          navigate('/report');
+        }
       } else if (response.message) {
         showAlert(response.message, 'error');
       } else {

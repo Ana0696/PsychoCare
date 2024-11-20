@@ -33,7 +33,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
         >
           <div className="h-full w-full px-3 pb-4 overflow-y-auto bg-white dark:bg-slate-900 ">
             <ul className="space-y-2 font-medium">
-              <SidebarItem icon={<GridViewIcon />} label="Dashboard" onClick={() => navigate('/dashboard')} />
               {user?.role &&
                 (user.role === UserRole.manager ||
                   user.role === UserRole.secretary ||
@@ -51,7 +50,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
                   <>
                     <SidebarItem
                       icon={<AssignmentTurnedInIcon />}
-                      label="Triagem"
+                      label="Triagens"
                       onClick={() => navigate('/screening')}
                     />
                     <SidebarItem

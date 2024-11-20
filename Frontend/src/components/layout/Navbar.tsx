@@ -77,14 +77,6 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
                           <button
                             className="block w-full px-0 py-2 pl-4 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white text-left rounded-md"
                             role="menuitem"
-                          >
-                            Alterar senha
-                          </button>
-                        </li>
-                        <li className="flex w-full">
-                          <button
-                            className="block w-full px-0 py-2 pl-4 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white text-left rounded-md"
-                            role="menuitem"
                             onClick={handleLogout}
                           >
                             Sair

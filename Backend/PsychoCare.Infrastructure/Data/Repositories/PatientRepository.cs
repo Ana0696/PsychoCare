@@ -16,7 +16,7 @@ namespace PsychoCare.Infrastructure.Data.Repositories
 
         public async Task<IEnumerable<Patient>> GetList(int? userId)
         {
-            return await _context.Patients.Where(p => userId == null ? true : p.Sessions.Any(s => s.UserId == userId)).OrderBy(p => p.Name).ToListAsync();
+            return await _context.Patients.Where(p => userId == null ? true : (p.Sessions.Any(s => s.UserId == userId) || p.Appointments.Any(a => a.UserId == userId && a.Disabled == false))).OrderBy(p => p.Name).ToListAsync();
         }
 
         public async Task<int> RegisterPatient(Patient newPatient)
@@ -31,7 +31,7 @@ namespace PsychoCare.Infrastructure.Data.Repositories
             return await _context.Patients.Include(p => p.Files)
                 .Include(p => p.Sessions).ThenInclude(s => s.User)
                 .Include(p => p.Sessions).ThenInclude(s => s.Room)
-                .Where(p => p.Id == patientId && userId == null ? true : p.Sessions.Any(s => s.UserId == userId)).FirstOrDefaultAsync();
+                .Where(p => p.Id == patientId && userId == null ? true : (p.Sessions.Any(s => s.UserId == userId) || p.Appointments.Any(a => a.UserId == userId && a.Disabled == false))).FirstOrDefaultAsync();
         }
 
         public async Task EditPatient(Patient patient)
